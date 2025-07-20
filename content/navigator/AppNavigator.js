@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext } from 'react';
 import LoginScreen from '../authentication/LoginScreen';
 import SignupScreen from '../authentication/SignupScreen';
 import OtpScreen from '../authentication/OtpScreen';
+import HomeScreen from '../screens/HomeScreen';
 
 const NavigationContext = createContext();
 
@@ -9,13 +10,18 @@ export const useNavigation = () => {
   return useContext(NavigationContext);
 };
 
-const AppNavigator = () => {
-  const [currentScreen, setCurrentScreen] = useState('Login');
+const AppNavigator = ({ setIsLoggedIn }) => {
+  const [currentScreen, setCurrentScreen] = useState('LOGIN');
   const [routeParams, setRouteParams] = useState({});
 
   const navigate = (screenName, params = {}) => {
     setRouteParams(params);
     setCurrentScreen(screenName);
+
+    // Trigger switch to BottomNavigator once user hits HOME
+    if (screenName === 'HOME') {
+      setIsLoggedIn(true);
+    }
   };
 
   const navigationValue = {
@@ -28,12 +34,14 @@ const AppNavigator = () => {
 
   const renderScreen = () => {
     switch (currentScreen) {
-      case 'Login':
+      case 'LOGIN':
         return <LoginScreen />;
       case 'OTP':
         return <OtpScreen />;
-      case 'Signup':
+      case 'SIGNUP':
         return <SignupScreen route={routeValue} />;
+      case 'HOME':
+        return <HomeScreen />;
       default:
         return <LoginScreen />;
     }
