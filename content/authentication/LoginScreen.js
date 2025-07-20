@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'reac
 import { useNavigation } from '../navigator/AppNavigator';
 import styles from '../components/styles/authStyles';
 import mmkvStorage from '../utils/MmkvStorage';
+import colors from '../components/styles/colors';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -31,7 +32,7 @@ const LoginScreen = () => {
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
-        placeholderTextColor="grey"
+        placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
       />
       
@@ -39,7 +40,7 @@ const LoginScreen = () => {
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
-        placeholderTextColor="grey"
+        placeholderTextColor={colors.placeholderText}
         secureTextEntry
         style={StyleSheet.flatten([styles.authTextInput])}
       />

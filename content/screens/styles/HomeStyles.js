@@ -1,0 +1,203 @@
+import { StyleSheet, Dimensions } from 'react-native';
+import colors from '../../components/styles/colors';
+
+const { width } = Dimensions.get('window');
+
+const HomeStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.crystalWhite,
+  },
+  
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: colors.glacierBlue,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.icyBlue,
+  },
+  
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.snowWhite,
+    letterSpacing: -0.3,
+  },
+  
+  headerIcon: {
+    marginLeft: 8,
+  },
+  
+  cubeIcon: {
+    fontSize: 24,
+    color: colors.snowWhite,
+  },
+  
+  headerRight: {
+    position: 'relative',
+  },
+  
+  notificationDot: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: colors.penguinOrange,
+    zIndex: 1,
+  },
+  
+  menuIcon: {
+    fontSize: 24,
+    color: colors.snowWhite,
+  },
+  
+  feedContainer: {
+    flex: 1,
+  },
+  
+  postContainer: {
+    backgroundColor: colors.snowWhite,
+    marginBottom: 8,
+  },
+  
+  postHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  
+  profilePic: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.icyGray,
+  },
+  
+  username: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.primaryText,
+    marginLeft: 12,
+  },
+  
+  dotsButton: {
+    padding: 8,
+  },
+  
+  dotsText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.secondaryText,
+  },
+  
+  postImage: {
+    width: width,
+    height: width,
+    backgroundColor: colors.icyGray,
+  },
+  
+  postActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  
+  hammerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  
+  hammerIcon: {
+    fontSize: 18,
+    marginRight: 6,
+  },
+  
+  hammerIconActive: {
+    color: colors.penguinOrange,
+  },
+  
+  hammerIconInactive: {
+    color: colors.slateGray,
+  },
+  
+  hammerCount: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.primaryText,
+  },
+  
+  postContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+  },
+  
+  caption: {
+    fontSize: 15,
+    color: colors.primaryText,
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  
+  commentsSection: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  },
+  
+  commentItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 8,
+  },
+  
+  commentProfilePic: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: colors.icyGray,
+    marginRight: 8,
+  },
+  
+  commentContent: {
+    flex: 1,
+  },
+  
+  commentText: {
+    fontSize: 14,
+    color: colors.primaryText,
+    lineHeight: 18,
+  },
+  
+  commentUsername: {
+    fontWeight: '600',
+    color: colors.primaryText,
+  },
+  
+  commentTime: {
+    fontSize: 12,
+    color: colors.secondaryText,
+    marginTop: 2,
+  },
+  
+});
+
+export default HomeStyles;

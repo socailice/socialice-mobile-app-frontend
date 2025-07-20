@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
 import styles from '../components/styles/authStyles';
+import colors from '../components/styles/colors';
 
 const OtpScreen = () => {
   const navigation = useNavigation();
@@ -51,7 +52,7 @@ const OtpScreen = () => {
             placeholder="Phone Number"
             value={phone}
             onChangeText={handlePhoneChange}
-            placeholderTextColor="grey"
+            placeholderTextColor={colors.placeholderText}
             keyboardType="phone-pad"
             maxLength={10}
             style={StyleSheet.flatten([styles.authTextInput])}
@@ -86,7 +87,7 @@ const OtpScreen = () => {
             placeholder="Enter OTP"
             value={otp}
             onChangeText={setOtp}
-            placeholderTextColor="grey"
+            placeholderTextColor={colors.placeholderText}
             keyboardType="numeric"
             style={StyleSheet.flatten([styles.authTextInput])}
           />

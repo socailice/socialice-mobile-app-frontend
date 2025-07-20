@@ -28,7 +28,7 @@ const colors = {
   // Text Colors
   primaryText: '#2F3E46',
   secondaryText: '#657786',
-  placeholderText: '#8DA2AE',
+  placeholderText: 'grey',
   whiteText: '#FFFFFF',
   
   // Transparent Colors

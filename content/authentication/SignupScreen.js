@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
 import styles from '../components/styles/authStyles';
+import colors from '../components/styles/colors';
 
 const SignupScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -61,7 +62,7 @@ const SignupScreen = ({ route }) => {
         placeholder="Full Name"
         value={fullname}
         onChangeText={setFullname}
-        placeholderTextColor="grey"
+        placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
       />
 
@@ -69,7 +70,7 @@ const SignupScreen = ({ route }) => {
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
-        placeholderTextColor="grey"
+        placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
       />
 
@@ -77,7 +78,7 @@ const SignupScreen = ({ route }) => {
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
-        placeholderTextColor="grey"
+        placeholderTextColor={colors.placeholderText}
         secureTextEntry
         style={StyleSheet.flatten([styles.authTextInput])}
       />
@@ -86,7 +87,7 @@ const SignupScreen = ({ route }) => {
         placeholder="Confirm Password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
-        placeholderTextColor="grey"
+        placeholderTextColor={colors.placeholderText}
         onBlur={validatePassword}
         secureTextEntry
         style={StyleSheet.flatten([styles.authTextInput])}
