@@ -1,107 +1,108 @@
 import { StyleSheet } from 'react-native';
+import colors from './colors';
 
 const styles = StyleSheet.create({
   // Container Styles
   authContainer: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
-    backgroundColor: 'white',
+    paddingHorizontal: 40,
+    backgroundColor: colors.snowWhite,
   },
 
   // Text Styles
   authTitle: {
-    fontSize: 24,
-    marginBottom: 30,
+    fontSize: 28,
+    fontWeight: '300',
+    marginBottom: 40,
     textAlign: 'center',
-    color: 'black',
+    color: colors.primaryText,
   },
 
   authSubtitle: {
-    marginBottom: 15,
+    fontSize: 14,
+    marginBottom: 30,
+    marginTop: -10,
     textAlign: 'center',
-    color: 'black',
+    color: colors.secondaryText,
+    fontWeight: '400',
   },
 
   authLabel: {
-    marginBottom: 5,
-    fontWeight: 'bold',
-    color: 'black',
+    fontSize: 12,
+    marginBottom: 6,
+    fontWeight: '500',
+    color: colors.primaryText,
+    textTransform: 'uppercase',
   },
 
   authLinkText: {
+    fontSize: 14,
     textAlign: 'center',
-    color: 'blue',
+    color: colors.arcticBlue,
+    fontWeight: '500',
+    marginTop: 30,
   },
 
   authErrorText: {
-    color: 'red',
-    marginBottom: 15,
-    textAlign: 'center',
+    fontSize: 12,
+    color: colors.errorRed,
+    marginBottom: 10,
+    textAlign: 'left',
   },
 
   authButtonText: {
-    color: 'white',
+    color: colors.whiteText,
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: '600',
   },
 
   // Input Styles
   authTextInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 15,
-    borderRadius: 5,
-    color: 'black',
-  },
-
-  authTextInputLarge: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 20,
-    borderRadius: 5,
-    color: 'black',
+      borderWidth: 0.5,
+    borderColor: colors.icyGray,
+    backgroundColor: colors.crystalWhite,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    marginBottom: 10,
+    borderRadius: 3,
+    fontSize: 14,
+    color: colors.primaryText,
   },
 
   authTextInputDisabled: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 15,
-    borderRadius: 5,
-    backgroundColor: '#f0f0f0',
-    color: '#666',
-  },
-
-  authTextInputError: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
+    borderWidth: 0.5,
+    borderColor: colors.icyGray,
+    backgroundColor: colors.icyBlue,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
     marginBottom: 10,
-    borderRadius: 5,
-    color: 'black',
+    borderRadius: 3,
+    fontSize: 14,
+    color: colors.secondaryText,
   },
 
   // Button Styles
   authButtonPrimary: {
-    backgroundColor: 'blue',
-    padding: 15,
-    borderRadius: 5,
-    marginBottom: 15,
+    backgroundColor: colors.arcticBlue,
+    paddingVertical: 10,
+    borderRadius: 3,
+    marginTop: 10,
+    marginBottom: 0,
   },
 
   authButtonSecondary: {
-    backgroundColor: 'green',
-    padding: 15,
-    borderRadius: 5,
+    backgroundColor: colors.deepIce,
+    paddingVertical: 10,
+    borderRadius: 3,
   },
 
   authButtonSuccess: {
-    backgroundColor: 'green',
-    padding: 15,
-    borderRadius: 5,
+    backgroundColor: colors.successGreen,
+    paddingVertical: 10,
+    borderRadius: 3,
+    marginTop: 10,
   },
 });
 

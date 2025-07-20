@@ -39,7 +39,7 @@ const LoginScreen = () => {
         onChangeText={setPassword}
         placeholderTextColor="grey"
         secureTextEntry
-        style={StyleSheet.flatten([styles.authTextInputLarge])}
+        style={StyleSheet.flatten([styles.authTextInput])}
       />
       
       <TouchableOpacity

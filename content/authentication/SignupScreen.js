@@ -82,7 +82,7 @@ const SignupScreen = ({ route }) => {
         placeholderTextColor="grey"
         onBlur={validatePassword}
         secureTextEntry
-        style={StyleSheet.flatten([styles.authTextInputError])}
+        style={StyleSheet.flatten([styles.authTextInput])}
       />
       
       {passwordError ? (

@@ -8,8 +8,20 @@ const OtpScreen = () => {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
+  const [phoneError, setPhoneError] = useState('');
+
+  const handlePhoneChange = (text) => {
+    if (text.length <= 10) {
+      setPhone(text);
+    }
+  };
 
   const sendOtp = () => {
+    if (phone.length < 10) {
+      setPhoneError('Phone number must be 10 digits');
+      return;
+    }
+    setPhoneError('');
     console.log('Sending OTP to:', phone);
     setOtpSent(true);
   };
@@ -30,10 +42,11 @@ const OtpScreen = () => {
           <TextInput
             placeholder="Phone Number"
             value={phone}
-            onChangeText={setPhone}
+            onChangeText={handlePhoneChange}
             placeholderTextColor="grey"
             keyboardType="phone-pad"
-            style={StyleSheet.flatten([styles.authTextInputLarge])}
+            maxLength={10}
+            style={StyleSheet.flatten([styles.authTextInput])}
           />
           
           <TouchableOpacity
@@ -42,6 +55,12 @@ const OtpScreen = () => {
           >
             <Text style={StyleSheet.flatten([styles.authButtonText])}>Send OTP</Text>
           </TouchableOpacity>
+          
+          {phoneError ? (
+            <Text style={StyleSheet.flatten([styles.authErrorText])}>
+              {phoneError}
+            </Text>
+          ) : null}
         </>
       ) : (
         <>
@@ -55,7 +74,7 @@ const OtpScreen = () => {
             onChangeText={setOtp}
             placeholderTextColor="grey"
             keyboardType="numeric"
-            style={StyleSheet.flatten([styles.authTextInputLarge])}
+            style={StyleSheet.flatten([styles.authTextInput])}
           />
           
           <TouchableOpacity
