@@ -14,7 +14,7 @@ const LoginScreen = () => {
       password: password
     };
     console.log('Login payload:', payload);
-  //SAANVI
+    navigation.navigate('HOME');
   };
 
   const goToSignup = () => {

@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext } from 'react';
 import LoginScreen from '../authentication/LoginScreen';
 import SignupScreen from '../authentication/SignupScreen';
 import OtpScreen from '../authentication/OtpScreen';
+import HomeScreen from '../screens/HomeScreen';
 
 const NavigationContext = createContext();
 
@@ -34,6 +35,8 @@ const AppNavigator = () => {
         return <OtpScreen />;
       case 'SIGNUP':
         return <SignupScreen route={routeValue} />;
+      case 'HOME':
+        return <HomeScreen/>;
       default:
         return <LoginScreen />;
     }
