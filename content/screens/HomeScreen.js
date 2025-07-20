@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import HomeStyles from './styles/HomeStyles';
+import HomeStyles from '../components/styles/HomeStyles';
 import Api from './api/Api';
 import colors from '../components/styles/colors';
 
