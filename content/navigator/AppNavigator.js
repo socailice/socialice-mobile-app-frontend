@@ -10,7 +10,7 @@ export const useNavigation = () => {
 };
 
 const AppNavigator = () => {
-  const [currentScreen, setCurrentScreen] = useState('Login');
+  const [currentScreen, setCurrentScreen] = useState('LOGIN');
   const [routeParams, setRouteParams] = useState({});
 
   const navigate = (screenName, params = {}) => {
@@ -28,7 +28,7 @@ const AppNavigator = () => {
 
   const renderScreen = () => {
     switch (currentScreen) {
-      case 'Login':
+      case 'LOGIN':
         return <LoginScreen />;
       case 'OTP':
         return <OtpScreen />;
