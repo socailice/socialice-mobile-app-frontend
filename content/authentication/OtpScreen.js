@@ -22,7 +22,7 @@ const OtpScreen = () => {
     }
   };
   const goToLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate('LOGIN');
   };
   const sendOtp = () => {
     if (phone.length < 10) {
@@ -36,7 +36,7 @@ const OtpScreen = () => {
 
   const verifyOtp = () => {
     console.log('Verifying OTP:', otp);
-    navigation.navigate('Signup', { phone: phone });
+    navigation.navigate('SIGNUP', { phone: phone });
   };
 
   return (

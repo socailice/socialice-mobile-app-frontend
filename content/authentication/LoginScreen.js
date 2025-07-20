@@ -14,7 +14,7 @@ const LoginScreen = () => {
       password: password
     };
     console.log('Login payload:', payload);
-    Alert.alert('Login', 'Login successful');
+  //SAANVI
   };
 
   const goToSignup = () => {

@@ -35,7 +35,7 @@ const SignupScreen = ({ route }) => {
 
     console.log('Signup payload:', payload);
     Alert.alert('Signup', 'User registered successfully');
-    navigation.navigate('Login');
+    navigation.navigate('LOGIN');
   };
 
   const validatePassword = () => {
@@ -107,7 +107,7 @@ const SignupScreen = ({ route }) => {
 
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('Login');
+          navigation.navigate('LOGIN');
         }}
       >
         <Text style={StyleSheet.flatten([styles.authLinkText])}>

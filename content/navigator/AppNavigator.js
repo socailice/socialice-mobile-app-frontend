@@ -32,7 +32,7 @@ const AppNavigator = () => {
         return <LoginScreen />;
       case 'OTP':
         return <OtpScreen />;
-      case 'Signup':
+      case 'SIGNUP':
         return <SignupScreen route={routeValue} />;
       default:
         return <LoginScreen />;
