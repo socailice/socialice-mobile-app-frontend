@@ -1,4 +1,3 @@
-// navigator/AppNavigator.js
 import React, { useState, createContext, useContext } from 'react';
 import LoginScreen from '../authentication/LoginScreen';
 import SignupScreen from '../authentication/SignupScreen';

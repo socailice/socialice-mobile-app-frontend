@@ -1,7 +1,7 @@
-// content/authentication/LoginScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
+import styles from '../components/styles/authStyles';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -22,15 +22,15 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor:'white' }}>
-      <Text style={{ fontSize: 24, marginBottom: 30, textAlign: 'center' }}>Login</Text>
+    <View style={StyleSheet.flatten([styles.authContainer])}>
+      <Text style={StyleSheet.flatten([styles.authTitle])}>Login</Text>
       
       <TextInput
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
         placeholderTextColor="grey"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 15, borderRadius: 5 }}
+        style={StyleSheet.flatten([styles.authTextInput])}
       />
       
       <TextInput
@@ -39,19 +39,18 @@ const LoginScreen = () => {
         onChangeText={setPassword}
         placeholderTextColor="grey"
         secureTextEntry
-        color="black"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 20, borderRadius: 5 }}
+        style={StyleSheet.flatten([styles.authTextInputLarge])}
       />
       
       <TouchableOpacity
         onPress={handleLogin}
-        style={{ backgroundColor: 'blue', padding: 15, borderRadius: 5, marginBottom: 15 }}
+        style={StyleSheet.flatten([styles.authButtonPrimary])}
       >
-        <Text style={{ color: 'white', textAlign: 'center', fontSize: 16 }}>Login</Text>
+        <Text style={StyleSheet.flatten([styles.authButtonText])}>Login</Text>
       </TouchableOpacity>
       
       <TouchableOpacity onPress={goToSignup}>
-        <Text style={{ textAlign: 'center', color: 'blue' }}>Don't have an account? Sign Up</Text>
+        <Text style={StyleSheet.flatten([styles.authLinkText])}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
