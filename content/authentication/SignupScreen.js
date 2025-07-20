@@ -1,7 +1,7 @@
-// content/authentication/SignupScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
+import styles from '../components/styles/authStyles';
 
 const SignupScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -40,21 +40,14 @@ const SignupScreen = ({ route }) => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20 , backgroundColor:'white'}}>
-      <Text style={{ fontSize: 24, marginBottom: 30, textAlign: 'center' }}>Sign Up</Text>
+    <View style={StyleSheet.flatten([styles.authContainer])}>
+      <Text style={StyleSheet.flatten([styles.authTitle])}>Sign Up</Text>
       
-      <Text style={{ marginBottom: 5, fontWeight: 'bold' }}>Phone Number</Text>
+      <Text style={StyleSheet.flatten([styles.authLabel])}>Phone Number</Text>
       <TextInput
         value={phone}
         editable={false}
-        style={{ 
-          borderWidth: 1, 
-          padding: 10, 
-          marginBottom: 15, 
-          borderRadius: 5, 
-          backgroundColor: '#f0f0f0',
-          color: '#666'
-        }}
+        style={StyleSheet.flatten([styles.authTextInputDisabled])}
       />
       
       <TextInput
@@ -62,7 +55,7 @@ const SignupScreen = ({ route }) => {
         value={fullname}
         onChangeText={setFullname}
         placeholderTextColor="grey"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 15, borderRadius: 5 }}
+        style={StyleSheet.flatten([styles.authTextInput])}
       />
       
       <TextInput
@@ -70,7 +63,7 @@ const SignupScreen = ({ route }) => {
         value={username}
         onChangeText={setUsername}
         placeholderTextColor="grey"
-        style={{ borderWidth: 1, padding: 10, marginBottom: 15, borderRadius: 5 }}
+        style={StyleSheet.flatten([styles.authTextInput])}
       />
       
       <TextInput
@@ -78,9 +71,8 @@ const SignupScreen = ({ route }) => {
         value={password}
         onChangeText={setPassword}
         placeholderTextColor="grey"
-        color="black"
         secureTextEntry
-        style={{ borderWidth: 1, padding: 10, marginBottom: 15, borderRadius: 5 }}
+        style={StyleSheet.flatten([styles.authTextInput])}
       />
       
       <TextInput
@@ -89,22 +81,21 @@ const SignupScreen = ({ route }) => {
         onChangeText={setConfirmPassword}
         placeholderTextColor="grey"
         onBlur={validatePassword}
-        color="black"
         secureTextEntry
-        style={{ borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 }}
+        style={StyleSheet.flatten([styles.authTextInput])}
       />
       
       {passwordError ? (
-        <Text style={{ color: 'red', marginBottom: 15, textAlign: 'center' }}>
+        <Text style={StyleSheet.flatten([styles.authErrorText])}>
           {passwordError}
         </Text>
       ) : null}
       
       <TouchableOpacity
         onPress={handleSignup}
-        style={{ backgroundColor: 'green', padding: 15, borderRadius: 5 }}
+        style={StyleSheet.flatten([styles.authButtonSuccess])}
       >
-        <Text style={{ color: 'white', textAlign: 'center', fontSize: 16 }}>Sign Up</Text>
+        <Text style={StyleSheet.flatten([styles.authButtonText])}>Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
