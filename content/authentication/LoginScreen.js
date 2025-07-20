@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
 import styles from '../components/styles/authStyles';
+import mmkvStorage from '../utils/MmkvStorage';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -14,6 +15,7 @@ const LoginScreen = () => {
       password: password
     };
     console.log('Login payload:', payload);
+    mmkvStorage.setItem('token', payload);
     navigation.navigate('HOME');
   };
 

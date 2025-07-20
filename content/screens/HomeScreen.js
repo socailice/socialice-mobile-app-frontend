@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
+const HomeScreen = () => {
+  return (
+    <View style={styles.container}>
+      <Text>hello</Text>
+    </View>
+  );
+};
 
-const HomeScreen =()=>{
-    return (
-        <View style={{flex:1, backgroundColor:'white'}}>
-            <Text>this is home screen</Text>
-        </View>
-    )
-}
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default HomeScreen;
