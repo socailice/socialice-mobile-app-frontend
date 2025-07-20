@@ -10,13 +10,18 @@ export const useNavigation = () => {
   return useContext(NavigationContext);
 };
 
-const AppNavigator = () => {
+const AppNavigator = ({ setIsLoggedIn }) => {
   const [currentScreen, setCurrentScreen] = useState('LOGIN');
   const [routeParams, setRouteParams] = useState({});
 
   const navigate = (screenName, params = {}) => {
     setRouteParams(params);
     setCurrentScreen(screenName);
+
+    // Trigger switch to BottomNavigator once user hits HOME
+    if (screenName === 'HOME') {
+      setIsLoggedIn(true);
+    }
   };
 
   const navigationValue = {
@@ -36,7 +41,7 @@ const AppNavigator = () => {
       case 'SIGNUP':
         return <SignupScreen route={routeValue} />;
       case 'HOME':
-        return <HomeScreen/>;
+        return <HomeScreen />;
       default:
         return <LoginScreen />;
     }
