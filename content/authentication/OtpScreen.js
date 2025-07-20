@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
 import styles from '../components/styles/authStyles';
 
@@ -10,12 +16,14 @@ const OtpScreen = () => {
   const [otpSent, setOtpSent] = useState(false);
   const [phoneError, setPhoneError] = useState('');
 
-  const handlePhoneChange = (text) => {
+  const handlePhoneChange = text => {
     if (text.length <= 10) {
       setPhone(text);
     }
   };
-
+  const goToLogin = () => {
+    navigation.navigate('Login');
+  };
   const sendOtp = () => {
     if (phone.length < 10) {
       setPhoneError('Phone number must be 10 digits');
@@ -36,7 +44,7 @@ const OtpScreen = () => {
       <Text style={StyleSheet.flatten([styles.authTitle])}>
         {otpSent ? 'Verify OTP' : 'Enter Phone Number'}
       </Text>
-      
+
       {!otpSent ? (
         <>
           <TextInput
@@ -48,26 +56,32 @@ const OtpScreen = () => {
             maxLength={10}
             style={StyleSheet.flatten([styles.authTextInput])}
           />
-          
+
           <TouchableOpacity
             onPress={sendOtp}
             style={StyleSheet.flatten([styles.authButtonPrimary])}
           >
-            <Text style={StyleSheet.flatten([styles.authButtonText])}>Send OTP</Text>
+            <Text style={StyleSheet.flatten([styles.authButtonText])}>
+              Send OTP
+            </Text>
           </TouchableOpacity>
-          
+
           {phoneError ? (
             <Text style={StyleSheet.flatten([styles.authErrorText])}>
               {phoneError}
             </Text>
           ) : null}
+
+          <TouchableOpacity onPress={goToLogin}>
+            <Text style={StyleSheet.flatten([styles.authLinkText])}> back</Text>
+          </TouchableOpacity>
         </>
       ) : (
         <>
           <Text style={StyleSheet.flatten([styles.authSubtitle])}>
             OTP sent to {phone}
           </Text>
-          
+
           <TextInput
             placeholder="Enter OTP"
             value={otp}
@@ -76,12 +90,22 @@ const OtpScreen = () => {
             keyboardType="numeric"
             style={StyleSheet.flatten([styles.authTextInput])}
           />
-          
+
           <TouchableOpacity
             onPress={verifyOtp}
             style={StyleSheet.flatten([styles.authButtonSuccess])}
           >
-            <Text style={StyleSheet.flatten([styles.authButtonText])}>Verify OTP</Text>
+            <Text style={StyleSheet.flatten([styles.authButtonText])}>
+              Verify OTP
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              setOtpSent(false);
+            }}
+          >
+            <Text style={StyleSheet.flatten([styles.authLinkText])}> back</Text>
           </TouchableOpacity>
         </>
       )}
