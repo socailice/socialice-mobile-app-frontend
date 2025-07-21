@@ -1,4 +1,3 @@
-// screens/HomeScreen.js
 import React, { useState } from 'react';
 import {
   View,
@@ -7,9 +6,8 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import HomeStyles from '../components/styles/HomeStyles';
+import HomeStyles from '../utils/styles/HomeStyles';
 import Api from './api/Api';
-import colors from '../components/styles/colors';
 
 const HomeScreen = () => {
   const [feedData, setFeedData] = useState(Api.globalFeed.data);

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
 import styles from '../components/styles/authStyles';
-import mmkvStorage from '../utils/MmkvStorage';
+import mmkvStorage from '../utils/storage/MmkvStorage';
 import colors from '../components/styles/colors';
 
 const LoginScreen = () => {
