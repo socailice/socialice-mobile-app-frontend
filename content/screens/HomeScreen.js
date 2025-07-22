@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import styles from '../utils/styles/HomeStyles';
 import Comments from '../components/Comments';
-import globalFeed from './api/Api';
+import {globalFeed} from './api/Api';
 import mmkvStorage from '../utils/storage/MmkvStorage';
 
 const HomeScreen = () => {
@@ -23,15 +23,15 @@ const HomeScreen = () => {
   const handleHammerPress = useCallback((postId) => {
     setFeedData(prevData =>
       prevData.map(post => {
-        if (post._id === postId) {
+        if (post?._id === postId) {
           return {
             ...post,
             hammers: {
-              ...post.hammers,
-              hammeredByCurrentUser: !post.hammers.hammeredByCurrentUser,
-              count: post.hammers.hammeredByCurrentUser 
-                ? post.hammers.count - 1 
-                : post.hammers.count + 1
+              ...post?.hammers,
+              hammeredByCurrentUser: !post?.hammers?.hammeredByCurrentUser,
+              count: post?.hammers?.hammeredByCurrentUser 
+                ? post?.hammers?.count - 1 
+                : post?.hammers?.count + 1
             }
           };
         }
@@ -48,7 +48,7 @@ const HomeScreen = () => {
   const handleAddComment = useCallback((postId, commentText) => {
     setFeedData(prevData =>
       prevData.map(post => {
-        if (post._id === postId) {
+        if (post?._id === postId) {
           const newComment = {
             _id: `comment_${Date.now()}`,
             text: commentText,
@@ -62,7 +62,7 @@ const HomeScreen = () => {
           
           return {
             ...post,
-            comments: [...(post.comments || []), newComment]
+            comments: [...(post?.comments || []), newComment]
           };
         }
         return post;
@@ -76,7 +76,7 @@ const HomeScreen = () => {
 
   const getSelectedPostComments = useMemo(() => {
     if (!selectedPostId) return [];
-    const selectedPost = feedData.find(post => post._id === selectedPostId);
+    const selectedPost = feedData.find(post => post?._id === selectedPostId);
     return selectedPost?.comments || [];
   }, [feedData, selectedPostId]);
 
@@ -87,16 +87,16 @@ const HomeScreen = () => {
         <View style={styles.postHeader}>
           <View style={styles.userInfo}>
             <Image
-              source={{ uri: item.user?.profilePic || 'https://via.placeholder.com/40' }}
+              source={{ uri: item?.user?.profilePic || 'https://via.placeholder.com/40' }}
               style={styles.profilePic}
             />
             <Text style={styles.username}>
-              {item.user?.username || 'Unknown User'}
+              {item?.user?.username || 'Unknown User'}
             </Text>
           </View>
           <TouchableOpacity 
             style={styles.dotsButton}
-            onPress={() => handleDotsPress(item._id)}
+            onPress={() => handleDotsPress(item?._id)}
           >
             <Text style={styles.dotsText}>•••</Text>
           </TouchableOpacity>
@@ -104,7 +104,7 @@ const HomeScreen = () => {
 
         {/* Post Image */}
         <Image
-          source={{ uri: item.imageUrl || 'https://via.placeholder.com/400' }}
+          source={{ uri: item?.imageUrl || 'https://via.placeholder.com/400' }}
           style={styles.postImage}
           resizeMode="cover"
         />
@@ -113,28 +113,28 @@ const HomeScreen = () => {
         <View style={styles.postActions}>
           <TouchableOpacity 
             style={styles.hammerButton}
-            onPress={() => handleHammerPress(item._id)}
+            onPress={() => handleHammerPress(item?._id)}
           >
             <Text style={[
               styles.hammerIcon,
-              item.hammers?.hammeredByCurrentUser 
+              item?.hammers?.hammeredByCurrentUser 
                 ? styles.hammerIconActive 
                 : styles.hammerIconInactive
             ]}>
               🔨
             </Text>
             <Text style={styles.hammerCount}>
-              {item.hammers?.count || 0}
+              {item?.hammers?.count || 0}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.commentsButton}
-            onPress={() => handleCommentsPress(item._id)}
+            onPress={() => handleCommentsPress(item?._id)}
           >
             <Text style={styles.commentsIcon}>💬</Text>
             <Text style={styles.commentsCount}>
-              {item.comments?.length || 0}
+              {item?.comments?.length || 0}
             </Text>
           </TouchableOpacity>
         </View>
@@ -142,16 +142,16 @@ const HomeScreen = () => {
         {/* Post Caption */}
         <View style={styles.postContent}>
           <Text style={styles.caption}>
-            {item.caption || ''}
+            {item?.caption || ''}
           </Text>
         </View>
 
         {/* View Comments Link */}
-        {item.comments && item.comments.length > 0 && (
+        {item?.comments && item?.comments.length > 0 && (
           <View style={styles.viewCommentsSection}>
-            <TouchableOpacity onPress={() => handleCommentsPress(item._id)}>
+            <TouchableOpacity onPress={() => handleCommentsPress(item?._id)}>
               <Text style={styles.viewCommentsText}>
-                View all {item.comments.length} comments
+                View all {item?.comments.length} comments
               </Text>
             </TouchableOpacity>
           </View>
@@ -166,7 +166,7 @@ const HomeScreen = () => {
         style={styles.feedContainer}
         data={feedData}
         renderItem={renderPost}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item?._id}
         showsVerticalScrollIndicator={false}
       />
 
