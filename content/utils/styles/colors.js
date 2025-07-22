@@ -6,7 +6,7 @@ const colors = {
   frostBlue: '#7FB3D3',
   arcticBlue: '#4A90A4',
   deepIce: '#2C5F73',
-  darkDeepIce: '#1f556aff',
+  darkDeepIce: '#3b6f84ff',
   
   // Neutral Colors
   snowWhite: '#FFFFFF',
