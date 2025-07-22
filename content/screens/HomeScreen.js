@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import styles from '../utils/styles/HomeStyles';
 import Comments from '../components/Comments';
-import Api from './api/Api';
+import globalFeed from './api/Api';
 import mmkvStorage from '../utils/storage/MmkvStorage';
 
 const formatTimeAgo = (dateString) => {
@@ -26,7 +26,7 @@ const formatTimeAgo = (dateString) => {
 };
 
 const HomeScreen = () => {
-  const [feedData, setFeedData] = useState(Api.globalFeed.data);
+  const [feedData, setFeedData] = useState(globalFeed?.data);
   const [commentsVisible, setCommentsVisible] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
 
