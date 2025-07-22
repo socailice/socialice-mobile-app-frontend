@@ -6,7 +6,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import HomeStyles from '../utils/styles/HomeStyles';
+import styles from '../utils/styles/HomeStyles';
 import Api from './api/Api';
 
 const HomeScreen = () => {
@@ -51,20 +51,20 @@ const HomeScreen = () => {
   };
 
   const renderComment = ({ item }) => (
-    <View style={HomeStyles.commentItem}>
+    <View style={styles.commentItem}>
       <Image
         source={{ uri: item.userDetails?.profilePic || 'https://via.placeholder.com/24' }}
-        style={HomeStyles.commentProfilePic}
+        style={styles.commentProfilePic}
       />
-      <View style={HomeStyles.commentContent}>
-        <Text style={HomeStyles.commentText}>
-          <Text style={HomeStyles.commentUsername}>
+      <View style={styles.commentContent}>
+        <Text style={styles.commentText}>
+          <Text style={styles.commentUsername}>
             {item.userDetails?.username || 'Unknown'}
           </Text>
           {' '}
           {item.text || ''}
         </Text>
-        <Text style={HomeStyles.commentTime}>
+        <Text style={styles.commentTime}>
           {formatTimeAgo(item.createdAt)}
         </Text>
       </View>
@@ -72,83 +72,85 @@ const HomeScreen = () => {
   );
 
   const renderPost = ({ item }) => (
-    <View style={HomeStyles.postContainer}>
-      {/* Post Header */}
-      <View style={HomeStyles.postHeader}>
-        <View style={HomeStyles.userInfo}>
-          <Image
-            source={{ uri: item.user?.profilePic || 'https://via.placeholder.com/40' }}
-            style={HomeStyles.profilePic}
-          />
-          <Text style={HomeStyles.username}>
-            {item.user?.username || 'Unknown User'}
-          </Text>
-        </View>
-        <TouchableOpacity 
-          style={HomeStyles.dotsButton}
-          onPress={() => handleDotsPress(item._id)}
-        >
-          <Text style={HomeStyles.dotsText}>•••</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Post Image */}
-      <Image
-        source={{ uri: item.imageUrl || 'https://via.placeholder.com/400' }}
-        style={HomeStyles.postImage}
-        resizeMode="cover"
-      />
-
-      {/* Post Actions */}
-      <View style={HomeStyles.postActions}>
-        <TouchableOpacity 
-          style={HomeStyles.hammerButton}
-          onPress={() => handleHammerPress(item._id)}
-        >
-          <Text style={[
-            HomeStyles.hammerIcon,
-            item.hammers?.hammeredByCurrentUser 
-              ? HomeStyles.hammerIconActive 
-              : HomeStyles.hammerIconInactive
-          ]}>
-            🔨
-          </Text>
-          <Text style={HomeStyles.hammerCount}>
-            {item.hammers?.count || 0}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Post Caption */}
-      <View style={HomeStyles.postContent}>
-        <Text style={HomeStyles.caption}>
-          {item.caption || ''}
-        </Text>
-      </View>
-
-      {/* Comments Preview */}
-      {item.comments && item.comments.length > 0 && (
-        <View style={HomeStyles.commentsSection}>
-          <FlatList
-            data={item.comments.slice(0, 2)}
-            renderItem={renderComment}
-            keyExtractor={(comment) => comment._id}
-            scrollEnabled={false}
-          />
-          {item.comments.length > 2 && (
-            <Text style={[HomeStyles.commentTime, { marginTop: 8 }]}>
-              View all {item.comments.length} comments
+    <View style={styles.postSection}>
+      <View style={styles.postContainer}>
+        {/* Post Header */}
+        <View style={styles.postHeader}>
+          <View style={styles.userInfo}>
+            <Image
+              source={{ uri: item.user?.profilePic || 'https://via.placeholder.com/40' }}
+              style={styles.profilePic}
+            />
+            <Text style={styles.username}>
+              {item.user?.username || 'Unknown User'}
             </Text>
-          )}
+          </View>
+          <TouchableOpacity 
+            style={styles.dotsButton}
+            onPress={() => handleDotsPress(item._id)}
+          >
+            <Text style={styles.dotsText}>•••</Text>
+          </TouchableOpacity>
         </View>
-      )}
+
+        {/* Post Image */}
+        <Image
+          source={{ uri: item.imageUrl || 'https://via.placeholder.com/400' }}
+          style={styles.postImage}
+          resizeMode="cover"
+        />
+
+        {/* Post Actions */}
+        <View style={styles.postActions}>
+          <TouchableOpacity 
+            style={styles.hammerButton}
+            onPress={() => handleHammerPress(item._id)}
+          >
+            <Text style={[
+              styles.hammerIcon,
+              item.hammers?.hammeredByCurrentUser 
+                ? styles.hammerIconActive 
+                : styles.hammerIconInactive
+            ]}>
+              🔨
+            </Text>
+            <Text style={styles.hammerCount}>
+              {item.hammers?.count || 0}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Post Caption */}
+        <View style={styles.postContent}>
+          <Text style={styles.caption}>
+            {item.caption || ''}
+          </Text>
+        </View>
+
+        {/* Comments Preview */}
+        {item.comments && item.comments.length > 0 && (
+          <View style={styles.commentsSection}>
+            <FlatList
+              data={item.comments.slice(0, 2)}
+              renderItem={renderComment}
+              keyExtractor={(comment) => comment._id}
+              scrollEnabled={false}
+            />
+            {item.comments.length > 2 && (
+              <Text style={[styles.commentTime, { marginTop: 8 }]}>
+                View all {item.comments.length} comments
+              </Text>
+            )}
+          </View>
+        )}
+      </View>
     </View>
   );
 
   return (
-    <View style={HomeStyles.container}>
+    <View style={styles.container}>
       <FlatList
-        style={HomeStyles.feedContainer}
+        style={styles.feedContainer}
         data={feedData}
         renderItem={renderPost}
         keyExtractor={(item) => item._id}

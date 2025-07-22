@@ -6,7 +6,7 @@ const { width } = Dimensions.get('window');
 const HomeStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.crystalWhite,
+    backgroundColor: colors.glacierBlue,
   },
   
   header: {
@@ -65,9 +65,25 @@ const HomeStyles = StyleSheet.create({
     flex: 1,
   },
   
+
+  postSection: {
+    marginBottom: 12,
+    backgroundColor: colors.glacierBlue,
+  },
+  
   postContainer: {
     backgroundColor: colors.snowWhite,
-    marginBottom: 8,
+    borderRadius: 8,
+    marginHorizontal: 8,
+    // Add subtle shadow for depth
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   
   postHeader: {
@@ -109,8 +125,8 @@ const HomeStyles = StyleSheet.create({
   },
   
   postImage: {
-    width: width,
-    height: width,
+    width: '100%',
+    height: width - 16, // Adjust for margins
     backgroundColor: colors.icyGray,
   },
   
