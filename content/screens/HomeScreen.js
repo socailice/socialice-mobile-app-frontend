@@ -11,22 +11,12 @@ import Comments from '../components/Comments';
 import globalFeed from './api/Api';
 import mmkvStorage from '../utils/storage/MmkvStorage';
 
-const formatTimeAgo = (dateString) => {
-  const now = new Date();
-  const postDate = new Date(dateString);
-  const diffInHours = Math.floor((now - postDate) / (1000 * 60 * 60));
-  
-  if (diffInHours < 1) return 'now';
-  if (diffInHours < 24) return `${diffInHours}h`;
-  
-  const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays < 7) return `${diffInDays}d`;
-  
-  return `${Math.floor(diffInDays / 7)}w`;
-};
-
 const HomeScreen = () => {
-  const [feedData, setFeedData] = useState(globalFeed?.data);
+  const [feedData, setFeedData] = useState(() => {
+  const feed = globalFeed();
+  return feed?.data || [];
+});
+
   const [commentsVisible, setCommentsVisible] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
 
