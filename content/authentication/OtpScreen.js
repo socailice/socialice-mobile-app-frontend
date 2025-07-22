@@ -7,8 +7,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
-import styles from '../components/styles/authStyles';
-import colors from '../components/styles/colors';
+import styles from '../utils/styles/authStyles';
+import colors from '../utils/styles/colors';
 
 const OtpScreen = () => {
   const navigation = useNavigation();

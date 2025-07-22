@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { StyleSheet } from 'react-native';
-import colors from './styles/colors';
+import colors from '../utils/styles/colors';
 
 const TopBar = () => {
   const handleNotificationPress = () => {
