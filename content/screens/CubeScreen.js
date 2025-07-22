@@ -2,11 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   FlatList,
   SafeAreaView,
-  StatusBar,
   TextInput,
 } from 'react-native';
 import { cubes, searchCubes } from './api/Api';
@@ -110,7 +108,6 @@ export default CubeScreen = () => {
   if (isSearchMode) {
     return (
       <SafeAreaView style={CubeStyles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor={colors?.icyBlue} />
         
         <View style={CubeStyles.searchHeader}>
           <TouchableOpacity style={CubeStyles.backButton} onPress={handleBackToMain}>
@@ -141,7 +138,6 @@ export default CubeScreen = () => {
 
   return (
     <SafeAreaView style={CubeStyles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={colors?.icyBlue} />
       
       <View style={CubeStyles.header}>
         <View style={CubeStyles.card}>
