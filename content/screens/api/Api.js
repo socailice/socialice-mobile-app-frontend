@@ -1,6 +1,6 @@
-const Api = {
+export default globalFeed = {
  
-  globalFeed: {
+
     success: true,
     message: "Global feed fetched successfully",
     data: [
@@ -106,8 +106,5 @@ const Api = {
         ]
       }
     ]
-  },
+  }
 
-};
-
-export default Api;

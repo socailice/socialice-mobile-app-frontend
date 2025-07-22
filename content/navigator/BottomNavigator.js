@@ -9,7 +9,7 @@ import CubeScreen from '../screens/CubeScreen';
 import ChatScreen from '../screens/ChatScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
-import colors from '../components/styles/colors';
+import colors from '../utils/styles/colors';
 
 const Tab = createBottomTabNavigator();
 

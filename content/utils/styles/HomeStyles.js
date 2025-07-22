@@ -6,7 +6,7 @@ const { width } = Dimensions.get('window');
 const HomeStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.crystalWhite,
+    backgroundColor: colors.glacierBlue,
   },
   
   header: {
@@ -65,9 +65,23 @@ const HomeStyles = StyleSheet.create({
     flex: 1,
   },
   
+  postSection: {
+    marginBottom: 12,
+    backgroundColor: colors.glacierBlue,
+  },
+  
   postContainer: {
     backgroundColor: colors.snowWhite,
-    marginBottom: 8,
+    borderRadius: 8,
+    marginHorizontal: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   
   postHeader: {
@@ -109,8 +123,8 @@ const HomeStyles = StyleSheet.create({
   },
   
   postImage: {
-    width: width,
-    height: width,
+    width: '100%',
+    height: width - 16,
     backgroundColor: colors.icyGray,
   },
   
@@ -124,7 +138,7 @@ const HomeStyles = StyleSheet.create({
   hammerButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: 20,
   },
   
   hammerIcon: {
@@ -146,6 +160,23 @@ const HomeStyles = StyleSheet.create({
     color: colors.primaryText,
   },
   
+  commentsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  
+  commentsIcon: {
+    fontSize: 18,
+    marginRight: 6,
+    color: colors.slateGray,
+  },
+  
+  commentsCount: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.primaryText,
+  },
+  
   postContent: {
     paddingHorizontal: 16,
     paddingBottom: 12,
@@ -158,46 +189,16 @@ const HomeStyles = StyleSheet.create({
     marginBottom: 8,
   },
   
-  commentsSection: {
+  viewCommentsSection: {
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
   
-  commentItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  
-  commentProfilePic: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: colors.icyGray,
-    marginRight: 8,
-  },
-  
-  commentContent: {
-    flex: 1,
-  },
-  
-  commentText: {
+  viewCommentsText: {
     fontSize: 14,
-    color: colors.primaryText,
-    lineHeight: 18,
-  },
-  
-  commentUsername: {
-    fontWeight: '600',
-    color: colors.primaryText,
-  },
-  
-  commentTime: {
-    fontSize: 12,
     color: colors.secondaryText,
-    marginTop: 2,
+    fontWeight: '500',
   },
-  
 });
 
 export default HomeStyles;

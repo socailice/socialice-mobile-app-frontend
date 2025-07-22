@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import { StyleSheet } from 'react-native';
-import colors from './styles/colors';
+import colors from '../utils/styles/colors';
 
 const TopBar = () => {
   const handleNotificationPress = () => {
@@ -33,7 +33,7 @@ const TopBar = () => {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: colors.deepIce,
+    backgroundColor: colors.darkDeepIce,
   },
   
   header: {
@@ -41,8 +41,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 18,
-    paddingVertical: 6,
-    backgroundColor: colors.glacierBlue,
+    backgroundColor: colors.darkDeepIce,
     borderBottomWidth: 1,
     borderBottomColor: colors.icyBlue,
     paddingRight: 10,

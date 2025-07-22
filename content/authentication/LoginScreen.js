@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
 import { useNavigation } from '../navigator/AppNavigator';
-import styles from '../components/styles/authStyles';
-import mmkvStorage from '../utils/MmkvStorage';
-import colors from '../components/styles/colors';
+import styles from '../utils/styles/authStyles';
+import mmkvStorage from '../utils/storage/MmkvStorage';
+import colors from '../utils/styles/colors';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
