@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { useNavigation } from '../navigator/AppNavigator';
+import { useNavigation } from '@react-navigation/native';
 import styles from '../utils/styles/authStyles';
 import mmkvStorage from '../utils/storage/MmkvStorage';
 import colors from '../utils/styles/colors';
 
-const LoginScreen = () => {
+const LoginScreen = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +17,7 @@ const LoginScreen = () => {
     };
     console.log('Login payload:', payload);
     mmkvStorage.setItem('token', payload);
-    navigation.navigate('HOME');
+    setIsLoggedIn(true); // trigger bottom navigator
   };
 
   const goToSignup = () => {
@@ -27,7 +27,7 @@ const LoginScreen = () => {
   return (
     <View style={StyleSheet.flatten([styles.authContainer])}>
       <Text style={StyleSheet.flatten([styles.authTitle])}>Login</Text>
-      
+
       <TextInput
         placeholder="Username"
         value={username}
@@ -35,7 +35,7 @@ const LoginScreen = () => {
         placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
       />
-      
+
       <TextInput
         placeholder="Password"
         value={password}
@@ -44,14 +44,14 @@ const LoginScreen = () => {
         secureTextEntry
         style={StyleSheet.flatten([styles.authTextInput])}
       />
-      
+
       <TouchableOpacity
         onPress={handleLogin}
         style={StyleSheet.flatten([styles.authButtonPrimary])}
       >
         <Text style={StyleSheet.flatten([styles.authButtonText])}>Login</Text>
       </TouchableOpacity>
-      
+
       <TouchableOpacity onPress={goToSignup}>
         <Text style={StyleSheet.flatten([styles.authLinkText])}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { useNavigation } from '../navigator/AppNavigator';
+import { useNavigation } from '@react-navigation/native';
 import styles from '../utils/styles/authStyles';
 import colors from '../utils/styles/colors';
 
@@ -23,7 +23,7 @@ const OtpScreen = () => {
     }
   };
   const goToLogin = () => {
-    navigation.navigate('LOGIN');
+    navigation.navigate('Login');
   };
   const sendOtp = () => {
     if (phone.length < 10) {
@@ -37,7 +37,8 @@ const OtpScreen = () => {
 
   const verifyOtp = () => {
     console.log('Verifying OTP:', otp);
-    navigation.navigate('SIGNUP', { phone: phone });
+    navigation.navigate('SignUp', { phone: phone });
+
   };
 
   return (
