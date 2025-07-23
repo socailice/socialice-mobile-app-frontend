@@ -14,7 +14,7 @@ import { ProfileApi } from './api/Api';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const GRID_COLUMNS = 3;
-const IMAGE_SIZE = SCREEN_WIDTH / GRID_COLUMNS;
+const IMAGE_SIZE = SCREEN_WIDTH / GRID_COLUMNS ;
 
 const ProfileScreen = () => {
   const [profile, setProfile] = useState(null);
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
   gridImage: {
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
+    margin:1,
   },
 });
 
