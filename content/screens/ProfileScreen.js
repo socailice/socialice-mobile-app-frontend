@@ -54,7 +54,7 @@ const ProfileScreen = () => {
             <Text style={styles.statLabel}>🔨 Hammers</Text>
           </View>
           <View style={styles.statBox}>
-            <Text style={styles.statValue}>{profile.stats?.socialiced}</Text>
+            <Text style={styles.statValue}>{profile?.stats?.socialiced}</Text>
             <Text style={styles.statLabel}>🧊 Socialiced</Text>
           </View>
         </View>
