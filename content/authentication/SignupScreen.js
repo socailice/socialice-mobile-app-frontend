@@ -7,7 +7,7 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
-import { useNavigation } from '../navigator/AppNavigator';
+import { useNavigation } from '@react-navigation/native';
 import styles from '../utils/styles/authStyles';
 import colors from '../utils/styles/colors';
 
@@ -36,7 +36,7 @@ const SignupScreen = ({ route }) => {
 
     console.log('Signup payload:', payload);
     Alert.alert('Signup', 'User registered successfully');
-    navigation.navigate('LOGIN');
+    navigation.navigate("Login");
   };
 
   const validatePassword = () => {
@@ -108,7 +108,7 @@ const SignupScreen = ({ route }) => {
 
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('LOGIN');
+          navigation.navigate("Login");
         }}
       >
         <Text style={StyleSheet.flatten([styles.authLinkText])}>
