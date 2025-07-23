@@ -24,7 +24,15 @@ const StackNavigator = ({ setIsLoggedIn }) => {
       }}
     >
       <Stack.Screen name="Login">
-        {(props) => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+        {(props) => (
+          <LoginScreen
+            {...props}
+            setIsLoggedIn={() => {
+              setIsLoggedIn(true);
+              props.navigation.replace('Main');
+            }}
+          />
+        )}
       </Stack.Screen>
       <Stack.Screen name="OTP" component={OtpScreen} />
       <Stack.Screen name="SignUp">
@@ -34,12 +42,12 @@ const StackNavigator = ({ setIsLoggedIn }) => {
             resetToLogin={() => resetToLogin(props.navigation)}
           />
         )}
-      </Stack.Screen>      
+      </Stack.Screen>
       <Stack.Screen
         name="Main"
         component={BottomNavigator}
         options={{
-          cardStyleInterpolator: CardStyleInterpolators.forNoAnimation, // disables slide
+          cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
         }}
       />
     </Stack.Navigator>

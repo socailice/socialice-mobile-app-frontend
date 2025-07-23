@@ -10,15 +10,16 @@ const LoginScreen = ({ setIsLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    const payload = {
-      username: username,
-      password: password
-    };
-    console.log('Login payload:', payload);
-    mmkvStorage.setItem('token', payload);
-    setIsLoggedIn(true); // trigger bottom navigator
+const handleLogin = () => {
+  const payload = {
+    username: username,
+    password: password,
   };
+  console.log('Login payload:', payload);
+  mmkvStorage.setItem('token', payload);
+  setIsLoggedIn(); 
+};
+
 
   const goToSignup = () => {
     navigation.navigate('OTP');
