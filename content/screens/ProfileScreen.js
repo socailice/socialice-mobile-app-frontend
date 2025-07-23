@@ -42,15 +42,15 @@ const ProfileScreen = () => {
     <ScrollView style={styles.container}>
       <View style={styles.profileTop}>
         <Image
-          source={{ uri: profile.profilePic }}
+          source={{ uri: profile?.profilePic }}
           style={styles.avatar}
         />
-        <Text style={styles.name}>{profile.fullname}</Text>
-        <Text style={styles.username}>@{profile.username}</Text>
+        <Text style={styles.name}>{profile?.fullname}</Text>
+        <Text style={styles.username}>@{profile?.username}</Text>
 
         <View style={styles.statsRow}>
           <View style={styles.statBox}>
-            <Text style={styles.statValue}>{profile.stats?.hammers}</Text>
+            <Text style={styles.statValue}>{profile?.stats?.hammers}</Text>
             <Text style={styles.statLabel}>🔨 Hammers</Text>
           </View>
           <View style={styles.statBox}>
