@@ -6,7 +6,7 @@ import SignupScreen from '../authentication/SignupScreen';
 
 const Stack = createStackNavigator();
 
-const MainNavigator = ({ setIsLoggedIn }) => {
+const StackNavigator = ({ setIsLoggedIn }) => {
   return (
     <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Login">
@@ -18,4 +18,4 @@ const MainNavigator = ({ setIsLoggedIn }) => {
   );
 };
 
-export default MainNavigator;
+export default StackNavigator;

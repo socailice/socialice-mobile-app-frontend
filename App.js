@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import MainNavigator from './content/navigator/StackNavigator';
+import StackNavigator from './content/navigator/StackNavigator';
 import BottomNavigator from './content/navigator/BottomNavigator';
 
 export default function App() {
@@ -11,7 +11,7 @@ export default function App() {
       {isLoggedIn ? (
         <BottomNavigator />
       ) : (
-        <MainNavigator setIsLoggedIn={setIsLoggedIn} />
+        <StackNavigator setIsLoggedIn={setIsLoggedIn} />
       )}
     </NavigationContainer>
   );
