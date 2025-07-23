@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import styles from '../utils/styles/authStyles';
 import colors from '../utils/styles/colors';
 
-const SignupScreen = ({ route }) => {
+const SignupScreen = ({ route, resetToLogin }) => {
   const navigation = useNavigation();
   const { phone } = route.params;
   const [fullname, setFullname] = useState('');
@@ -36,7 +36,7 @@ const SignupScreen = ({ route }) => {
 
     console.log('Signup payload:', payload);
     Alert.alert('Signup', 'User registered successfully');
-    navigation.navigate("Login");
+    navigation.navigate('Login');
   };
 
   const validatePassword = () => {
@@ -108,7 +108,11 @@ const SignupScreen = ({ route }) => {
 
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Login");
+          if (typeof resetToLogin === 'function') {
+            resetToLogin(); // This clears the stack and goes to Login
+          } else {
+            navigation.navigate('Login'); // fallback
+          }
         }}
       >
         <Text style={StyleSheet.flatten([styles.authLinkText])}>
