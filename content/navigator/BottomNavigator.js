@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import PostScreen from '../screens/PostScreen';
 import CubeScreen from '../screens/CubeScreen';
 import ChatScreen from '../screens/ChatScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import colors from '../utils/styles/colors';
 
 const Tab = createBottomTabNavigator();
@@ -42,6 +43,9 @@ const BottomNavigator = () => {
               case 'Chat':
                 iconName = 'chatbubble-ellipses-outline';
                 break;
+              case 'Profile':
+                iconName = 'person-outline';
+                break;
             }
 
             return <Ionicons name={iconName} size={24} color={color} />;
@@ -49,9 +53,10 @@ const BottomNavigator = () => {
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Post" component={PostScreen} />
         <Tab.Screen name="Cube" component={CubeScreen} />
+        <Tab.Screen name="Post" component={PostScreen} />
         <Tab.Screen name="Chat" component={ChatScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>
     </View>
   );
