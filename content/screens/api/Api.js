@@ -160,3 +160,30 @@ export function searchCubes(query = '') {
   
   return { "results": filteredUsers };
 }
+
+
+
+export function ProfileApi(){
+  return{
+  success: true,
+  message: 'Profile fetched successfully',
+  data: {
+    _Id: '12345',
+    username: 'social_alice',
+    fullname: 'Kush',
+    profilePic: 'https://picsum.photos/200',
+    isSocialiced: false,
+    stats: {
+      socialiced: 208,
+      hammers: 365,
+    },
+    posts: [
+      { id: 'post_001', imageUrl: 'https://picsum.photos/201' },
+      { id: 'post_002', imageUrl: 'https://picsum.photos/202' },
+      { id: 'post_003', imageUrl: 'https://picsum.photos/203' },
+      { id: 'post_004', imageUrl: 'https://picsum.photos/204' },
+      { id: 'post_005', imageUrl: 'https://picsum.photos/205' },
+      { id: 'post_006', imageUrl: 'https://picsum.photos/206' },
+    ],
+  },
+}};
