@@ -107,12 +107,5 @@ export function globalFeed() {
         ]
       }
     ]
-  };
-}
+  }
 
-export function cubes() {
-  return {
-    shapes: ['cube', 'box', 'square'],
-    count: 3
-  };
-}
