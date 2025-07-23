@@ -108,4 +108,4 @@ export function globalFeed() {
       }
     ]
   }
-
+}
