@@ -33,40 +33,40 @@ const ProfileScreen = () => {
   };
 
   const renderPost = ({ item }) => (
-    <Image source={{ uri: item?.imageUrl }} style={styles.gridImage} />
+    <Image source={{ uri: item?.imageUrl }} style={ProfileStyles.gridImage} />
   );
 
   if (!profile) return null;
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.profileTop}>
+    <ScrollView style={ProfileStyles.container}>
+      <View style={ProfileStyles.profileTop}>
         <Image
           source={{ uri: profile?.profilePic }}
-          style={styles.avatar}
+          style={ProfileStyles.avatar}
         />
-        <Text style={styles.name}>{profile?.fullname}</Text>
-        <Text style={styles.username}>@{profile?.username}</Text>
+        <Text style={ProfileStyles.name}>{profile?.fullname}</Text>
+        <Text style={ProfileStyles.username}>@{profile?.username}</Text>
 
-        <View style={styles.statsRow}>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>{profile?.stats?.hammers}</Text>
-            <Text style={styles.statLabel}>🔨 Hammers</Text>
+        <View style={ProfileStyles.statsRow}>
+          <View style={ProfileStyles.statBox}>
+            <Text style={ProfileStyles.statValue}>{profile?.stats?.hammers}</Text>
+            <Text style={ProfileStyles.statLabel}>🔨 Hammers</Text>
           </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>{profile?.stats?.socialiced}</Text>
-            <Text style={styles.statLabel}>🧊 Socialiced</Text>
+          <View style={ProfileStyles.statBox}>
+            <Text style={ProfileStyles.statValue}>{profile?.stats?.socialiced}</Text>
+            <Text style={ProfileStyles.statLabel}>🧊 Socialiced</Text>
           </View>
         </View>
 
         <TouchableOpacity
           style={[
-            styles.socialiceButton,
+            ProfileStyles.socialiceButton,
             isSocialiced && { backgroundColor: colors.successGreen },
           ]}
           onPress={toggleSocialice}
         >
-          <Text style={styles.buttonText}>
+          <Text style={ProfileStyles.buttonText}>
             {isSocialiced ? 'Socialiced' : 'Socialice?'}
           </Text>
         </TouchableOpacity>
@@ -78,13 +78,13 @@ const ProfileScreen = () => {
         renderItem={renderPost}
         keyExtractor={(item) => item.id}
         scrollEnabled={false}
-        contentContainerStyle={styles.gridContainer}
+        contentContainerStyle={ProfileStyles.gridContainer}
       />
     </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
+const ProfileStyles = StyleSheet.create({
   container: {
     backgroundColor: colors.crystalWhite,
     flex: 1,

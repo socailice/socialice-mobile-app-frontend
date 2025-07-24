@@ -1,11 +1,11 @@
-export default globalFeed = {
- 
+export function globalFeed() {
 
-    success: true,
-    message: "Global feed fetched successfully",
-    data: [
-      {
-        _id: "post123",
+    return {
+        success: true,
+        message: "Global feed fetched successfully",
+        data: [
+            {
+                _id: "post123",
         imageUrl: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=500",
         caption: "Just chilling with my new sunglasses 😎 #CoolCat #SunglassesLife",
         createdAt: "2025-07-17T14:30:00Z",
@@ -108,6 +108,7 @@ export default globalFeed = {
     ]
 
   };
+}
 
 export function cubes() {   
   return {   
@@ -187,3 +188,32 @@ export function ProfileApi(){
     ],
   },
 }};
+
+
+
+export function ChatScreenApi(){
+  return{
+    success: true,
+    message: 'Chat data fetched successfully',
+    data: [
+      {
+        id: '1',
+        name: 'Alice Johnson',
+        lastMessage: 'See you tomorrow!',
+        avatar: 'https://i.pravatar.cc/150?img=1',
+      },
+      {
+        id: '2',
+        name: 'Bob Smith',
+        lastMessage: 'Got it!',
+        avatar: 'https://i.pravatar.cc/150?img=2',
+      },
+      {
+        id: '3',
+        name: 'Charlie Evans',
+        lastMessage: 'Let’s meet soon.',
+        avatar: 'https://i.pravatar.cc/150?img=3',
+      },
+    ]
+  }
+}  
