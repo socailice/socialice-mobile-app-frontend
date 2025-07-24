@@ -4,6 +4,8 @@ import LoginScreen from '../authentication/LoginScreen';
 import OtpScreen from '../authentication/OtpScreen';
 import SignupScreen from '../authentication/SignupScreen';
 import BottomNavigator from './BottomNavigator';
+import MessageScreen from '../screens/MessageScreen';
+
 
 const Stack = createStackNavigator();
 
@@ -50,6 +52,8 @@ const StackNavigator = ({ setIsLoggedIn }) => {
           cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
         }}
       />
+      <Stack.Screen name="MessageScreen" component={MessageScreen} />
+
     </Stack.Navigator>
   );
 };
