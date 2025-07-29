@@ -4,13 +4,29 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TopBar from '../components/TopBar';
 import HomeScreen from '../screens/HomeScreen';
-import PostScreen from '../screens/PostScreen';
 import CubeScreen from '../screens/CubeScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import colors from '../utils/styles/colors';
 
 const Tab = createBottomTabNavigator();
+
+// Simple component that navigates to post flow when mounted
+const PostButton = ({ navigation, route }) => {
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Get the current tab name from the parent navigator
+      const currentTab = route.name;
+      navigation.navigate('PostFlow', { 
+        screen: 'MediaSelection',
+        params: { returnTo: currentTab }
+      });
+    });
+    return unsubscribe;
+  }, [navigation, route]);
+  
+  return <View style={{ flex: 1, backgroundColor: colors.crystalWhite }} />;
+};
 
 const BottomNavigator = () => {
   return (
@@ -54,7 +70,7 @@ const BottomNavigator = () => {
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Cube" component={CubeScreen} />
-        <Tab.Screen name="Post" component={PostScreen} />
+        <Tab.Screen name="Post" component={PostButton} />
         <Tab.Screen name="Chat" component={ChatScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
       </Tab.Navigator>

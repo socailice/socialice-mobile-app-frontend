@@ -5,7 +5,9 @@ import OtpScreen from '../authentication/OtpScreen';
 import SignupScreen from '../authentication/SignupScreen';
 import BottomNavigator from './BottomNavigator';
 import MessageScreen from '../screens/MessageScreen';
-
+import MediaSelectionScreen from '../screens/MediaSelectionScreen';
+import ImageCropScreen from '../screens/ImageCropScreen';
+import PostCaptionScreen from '../screens/PostCaptionScreen';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +17,20 @@ const resetToLogin = (navigation) => {
     routes: [{ name: 'Login' }],
   });
 };
+
+// Post Flow Stack Navigator
+const PostFlowNavigator = () => (
+  <Stack.Navigator
+    screenOptions={{
+      headerShown: false,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+    }}
+  >
+    <Stack.Screen name="MediaSelection" component={MediaSelectionScreen} />
+    <Stack.Screen name="ImageCrop" component={ImageCropScreen} />
+    <Stack.Screen name="PostCaption" component={PostCaptionScreen} />
+  </Stack.Navigator>
+);
 
 const StackNavigator = ({ setIsLoggedIn }) => {
   return (
@@ -53,7 +69,16 @@ const StackNavigator = ({ setIsLoggedIn }) => {
         }}
       />
       <Stack.Screen name="MessageScreen" component={MessageScreen} />
-
+      
+      {/* Post Flow Stack */}
+      <Stack.Screen
+        name="PostFlow"
+        component={PostFlowNavigator}
+        options={{
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+          gestureEnabled: false,
+        }}
+      />
     </Stack.Navigator>
   );
 };
