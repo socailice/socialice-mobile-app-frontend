@@ -2,7 +2,7 @@ import API_CONFIG from "../../../settings";
 
 export const login = async (phone, password) => {
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/socialice/auth/login`, {
+    const response = await fetch(API_CONFIG.BASE_URL + "/socialice/auth/login", {
       method: 'POST',
       headers: API_CONFIG.HEADERS,
       body: JSON.stringify({
@@ -31,26 +31,34 @@ export const login = async (phone, password) => {
     };
   }
 };
-
 export const signup = async (fullname, username, password, phone) => {
   try {
-    const response = await fetch(`${API_CONFIG.BASE_URL}/socialice/auth/register`, {
+    const response = await fetch(API_CONFIG.BASE_URL + "/socialice/auth/register", {
       method: 'POST',
       headers: API_CONFIG.HEADERS,
       body: JSON.stringify({
-        fullname: fullname,
-        username: username,
-        password: password,
-        phone: phone,
+        fullname,
+        username,
+        phone: Number(phone),
+        password,
       }),
     });
 
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json(); // Try parsing as JSON
+    } catch (jsonError) {
+      const text = await response.text(); // fallback to raw text
+      return {
+        success: false,
+        error: text || 'Signup failed (invalid response)',
+      };
+    }
 
     if (response.ok) {
       return {
         success: true,
-        data: data,
+        data,
       };
     } else {
       return {
