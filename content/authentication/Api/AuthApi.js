@@ -31,6 +31,9 @@ export const login = async (phone, password) => {
     };
   }
 };
+
+
+
 export const signup = async (fullname, username, password, phone) => {
   try {
     const response = await fetch(API_CONFIG.BASE_URL + "/socialice/auth/register", {
@@ -46,9 +49,9 @@ export const signup = async (fullname, username, password, phone) => {
 
     let data;
     try {
-      data = await response.json(); // Try parsing as JSON
+      data = await response.json(); 
     } catch (jsonError) {
-      const text = await response.text(); // fallback to raw text
+      const text = await response.text(); 
       return {
         success: false,
         error: text || 'Signup failed (invalid response)',
