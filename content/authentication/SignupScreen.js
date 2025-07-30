@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   Alert,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../utils/styles/authStyles';
 import colors from '../utils/styles/colors';
+import { signup } from './Api/AuthApi';
 
 const SignupScreen = ({ route, resetToLogin }) => {
   const navigation = useNavigation();
@@ -19,24 +21,45 @@ const SignupScreen = ({ route, resetToLogin }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (password !== confirmPassword) {
       setPasswordError('Passwords do not match');
       return;
     }
     setPasswordError('');
 
-    const payload = {
-      fullname: fullname,
-      username: username,
-      password: password,
-      phone: phone,
-    };
+    if (!fullname.trim() || !username.trim() || !password.trim()) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
 
-    console.log('Signup payload:', payload);
-    Alert.alert('Signup', 'User registered successfully');
-    navigation.navigate('Login');
+    setLoading(true);
+
+    try {
+      const result = await signup(fullname.trim(), username.trim(), password, phone);
+      
+      if (result.success) {
+        Alert.alert(
+          'Signup', 
+          'User registered successfully',
+          [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('Login')
+            }
+          ]
+        );
+      } else {
+        Alert.alert('Signup Failed', result.error);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+      console.error('Signup error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const validatePassword = () => {
@@ -50,14 +73,12 @@ const SignupScreen = ({ route, resetToLogin }) => {
   return (
     <View style={StyleSheet.flatten([styles.authContainer])}>
       <Text style={StyleSheet.flatten([styles.authTitle])}>Sign Up</Text>
-
       <Text style={StyleSheet.flatten([styles.authLabel])}>Phone Number</Text>
       <TextInput
         value={phone}
         editable={false}
         style={StyleSheet.flatten([styles.authTextInputDisabled])}
       />
-
       <TextInput
         placeholder="Full Name"
         value={fullname}
@@ -65,7 +86,6 @@ const SignupScreen = ({ route, resetToLogin }) => {
         placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
       />
-
       <TextInput
         placeholder="Username"
         value={username}
@@ -73,7 +93,6 @@ const SignupScreen = ({ route, resetToLogin }) => {
         placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
       />
-
       <TextInput
         placeholder="Password"
         value={password}
@@ -82,7 +101,6 @@ const SignupScreen = ({ route, resetToLogin }) => {
         secureTextEntry
         style={StyleSheet.flatten([styles.authTextInput])}
       />
-
       <TextInput
         placeholder="Confirm Password"
         value={confirmPassword}
@@ -92,20 +110,22 @@ const SignupScreen = ({ route, resetToLogin }) => {
         secureTextEntry
         style={StyleSheet.flatten([styles.authTextInput])}
       />
-
       {passwordError ? (
         <Text style={StyleSheet.flatten([styles.authErrorText])}>
           {passwordError}
         </Text>
       ) : null}
-
       <TouchableOpacity
         onPress={handleSignup}
         style={StyleSheet.flatten([styles.authButtonSuccess])}
+        disabled={loading}
       >
-        <Text style={StyleSheet.flatten([styles.authButtonText])}>Sign Up</Text>
+        {loading ? (
+          <ActivityIndicator color={colors.white} />
+        ) : (
+          <Text style={StyleSheet.flatten([styles.authButtonText])}>Sign Up</Text>
+        )}
       </TouchableOpacity>
-
       <TouchableOpacity
         onPress={() => {
           if (typeof resetToLogin === 'function') {

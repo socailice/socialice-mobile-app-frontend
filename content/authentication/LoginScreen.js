@@ -4,22 +4,38 @@ import { useNavigation } from '@react-navigation/native';
 import styles from '../utils/styles/authStyles';
 import mmkvStorage from '../utils/storage/MmkvStorage';
 import colors from '../utils/styles/colors';
+import { login } from './Api/AuthApi';
 
 const LoginScreen = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
-  const [username, setUsername] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-const handleLogin = () => {
-  const payload = {
-    username: username,
-    password: password,
+  const handleLogin = async () => {
+    if (!phone || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const result = await login(phone, password);
+
+      if (result.success) {
+        mmkvStorage.setItem('token', result.data);
+        setIsLoggedIn(true);
+        Alert.alert('Success', 'Login successful!');
+      } else {
+        Alert.alert('Error', result.error);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
-  console.log('Login payload:', payload);
-  mmkvStorage.setItem('token', payload);
-  setIsLoggedIn(); 
-};
-
 
   const goToSignup = () => {
     navigation.navigate('OTP');
@@ -30,11 +46,12 @@ const handleLogin = () => {
       <Text style={StyleSheet.flatten([styles.authTitle])}>Login</Text>
 
       <TextInput
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="Phone Number"
+        value={phone}
+        onChangeText={setPhone}
         placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
+        keyboardType="phone-pad"
       />
 
       <TextInput
@@ -49,8 +66,11 @@ const handleLogin = () => {
       <TouchableOpacity
         onPress={handleLogin}
         style={StyleSheet.flatten([styles.authButtonPrimary])}
+        disabled={loading}
       >
-        <Text style={StyleSheet.flatten([styles.authButtonText])}>Login</Text>
+        <Text style={StyleSheet.flatten([styles.authButtonText])}>
+          {loading ? 'Logging in...' : 'Login'}
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={goToSignup}>
