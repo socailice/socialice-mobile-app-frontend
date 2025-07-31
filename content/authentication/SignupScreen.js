@@ -38,22 +38,24 @@ const SignupScreen = ({ route, resetToLogin }) => {
     setLoading(true);
 
     try {
-      const result = await signup(fullname.trim(), username.trim(), password, phone);
+      onPress: () => navigation.navigate('Login');
+      // const result = await signup(fullname.trim(), username.trim(), password, phone);
       
-      if (result.success) {
-        Alert.alert(
-          'Signup', 
-          'User registered successfully',
-          [
-            {
-              text: 'OK',
-              onPress: () => navigation.navigate('Login')
-            }
-          ]
-        );
-      } else {
-        Alert.alert('Signup Failed', result.error);
-      }
+      // if (result.success) {
+      //   Alert.alert(
+      //     'Signup', 
+      //     'User registered successfully',
+      //     [
+      //       {
+      //         text: 'OK',
+      //         onPress: () => navigation.navigate('Login')
+      //       }
+      //     ]
+      //   );
+      // } else {
+      //   Alert.alert('Signup Failed', result.error);
+      // }
+      console.log("SignupApi");
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
       console.error('Signup error:', error);

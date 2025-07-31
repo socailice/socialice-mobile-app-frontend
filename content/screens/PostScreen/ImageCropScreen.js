@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import PostStyles from '../../utils/styles/PostStyles'; // Adjust the import path as necessary
+import PostStyles from '../../utils/styles/PostStyles'; 
 
 const ImageCropScreen = ({ navigation, route }) => {
   const { imageUri, imageData } = route.params;
