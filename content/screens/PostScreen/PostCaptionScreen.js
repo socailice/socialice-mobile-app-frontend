@@ -12,7 +12,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import PostStyles from '../utils/styles/PostStyles';
+import PostStyles from '../../utils/styles/PostStyles';
 
 const PostCaptionScreen = ({ navigation, route }) => {
   const { imageData } = route.params;

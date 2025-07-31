@@ -5,9 +5,9 @@ import OtpScreen from '../authentication/OtpScreen';
 import SignupScreen from '../authentication/SignupScreen';
 import BottomNavigator from './BottomNavigator';
 import MessageScreen from '../screens/MessageScreen';
-import MediaSelectionScreen from '../screens/MediaSelectionScreen';
-import ImageCropScreen from '../screens/ImageCropScreen';
-import PostCaptionScreen from '../screens/PostCaptionScreen';
+import MediaSelectionScreen from '../screens/PostScreen/MediaSelectionScreen';
+import ImageCropScreen from '../screens/PostScreen/ImageCropScreen';
+import PostCaptionScreen from '../screens/PostScreen/PostCaptionScreen';
 
 const Stack = createStackNavigator();
 
