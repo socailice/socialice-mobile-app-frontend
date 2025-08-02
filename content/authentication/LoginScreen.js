@@ -23,13 +23,15 @@ const LoginScreen = ({ setIsLoggedIn }) => {
     try {
       const result = await login(phone, password);
 
-      if (result.success) {
-        mmkvStorage.setItem('token', result.data);
-        setIsLoggedIn(true);
-        Alert.alert('Success', 'Login successful!');
-      } else {
-        Alert.alert('Error', result.error);
-      }
+      // if (result.success) {
+      //   mmkvStorage.setItem('token', result?.data);
+      //   setIsLoggedIn(true);
+      //   Alert.alert('Success', 'Login successful!');
+      // } else {
+      //   Alert.alert('Error', result.error);
+      // }
+      navigation.navigate('Main');
+      console.log("LoginApi");
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
     } finally {
