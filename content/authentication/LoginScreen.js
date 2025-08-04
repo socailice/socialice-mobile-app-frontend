@@ -12,32 +12,26 @@ const LoginScreen = ({ setIsLoggedIn }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!phone || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
-    }
+const handleLogin = async () => {
+  setLoading(true);
 
-    setLoading(true);
+  try {
+    const result = await login(phone, password);
 
-    try {
-      const result = await login(phone, password);
-
-      // if (result.success) {
-      //   mmkvStorage.setItem('token', result?.data);
-      //   setIsLoggedIn(true);
-      //   Alert.alert('Success', 'Login successful!');
-      // } else {
-      //   Alert.alert('Error', result.error);
-      // }
-      navigation.navigate('Main');
+    if (result.success) {
+      mmkvStorage.setItem('token', result.data);
+      setIsLoggedIn(true);
+      navigation.navigate('Main'); 
       console.log("LoginApi");
-    } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
+    } else {
+      Alert.alert('Error', result.error);
     }
-  };
+  } catch (error) {
+    Alert.alert('Error', 'Something went wrong. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const goToSignup = () => {
     navigation.navigate('OTP');

@@ -13,7 +13,7 @@ import {
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import PostStyles from '../utils/styles/PostStyles';
+import PostStyles from '../../utils/styles/PostStyles';
 
 const MediaSelectionScreen = ({ navigation }) => {
   const [photos, setPhotos] = useState([]);

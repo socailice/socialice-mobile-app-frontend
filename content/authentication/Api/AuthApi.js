@@ -31,9 +31,14 @@ export const login = async (phone, password) => {
     };
   }
 };
+
 export const signup = async (fullname, username, password, phone) => {
   try {
-    const response = await fetch(API_CONFIG.BASE_URL + "/socialice/auth/register", {
+    const url = API_CONFIG.BASE_URL + "/socialice/auth/register";
+    console.log("Making request to:", url);
+    console.log("Request body:", { fullname, username, phone: Number(phone), password, friends: [] });
+
+    const response = await fetch(url, {
       method: 'POST',
       headers: API_CONFIG.HEADERS,
       body: JSON.stringify({
@@ -44,11 +49,14 @@ export const signup = async (fullname, username, password, phone) => {
       }),
     });
 
+    console.log("Response status:", response.status);
+
     let data;
     try {
-      data = await response.json(); // Try parsing as JSON
+      data = await response.json(); 
     } catch (jsonError) {
-      const text = await response.text(); // fallback to raw text
+      const text = await response.text(); 
+      console.error("Error parsing JSON:", jsonError);
       return {
         success: false,
         error: text || 'Signup failed (invalid response)',
@@ -67,6 +75,7 @@ export const signup = async (fullname, username, password, phone) => {
       };
     }
   } catch (error) {
+    console.error("Network error:", error);
     return {
       success: false,
       error: error?.message || 'Network error',
