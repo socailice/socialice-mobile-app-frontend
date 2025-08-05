@@ -15,7 +15,6 @@ export const uploadImage = async (imageUri) => {
   formData.append('upload_preset', uploadPreset);
 
   try {
-    console.log('Starting upload to Cloudinary...');
     
     const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
       method: 'POST',
@@ -26,14 +25,12 @@ export const uploadImage = async (imageUri) => {
       },
     });
 
-    console.log('Response status:', response.status);
 
     if (!response.ok) {
       throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
     }
 
     const result = await response.json();
-    console.log('Upload result:', result);
 
     if (result.error) {
       const errorMessage = typeof result.error === 'string' 

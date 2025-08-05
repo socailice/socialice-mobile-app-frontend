@@ -27,10 +27,8 @@ const handlePost = async () => {
   setIsPosting(true);
   
   try {
-    console.log('Image URI:', imageData.path || imageData.uri);
     
     const imageUrl = await uploadImage(imageData.uri || imageData.path);
-    console.log('Image uploaded successfully:', imageUrl);
           
     const postData = {
       caption: caption,

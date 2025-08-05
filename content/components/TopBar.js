@@ -6,7 +6,7 @@ import colors from '../utils/styles/colors';
 
 const TopBar = () => {
   const handleNotificationPress = () => {
-    console.log('Notification pressed');
+    // Handle notification press
   };
 
   return (

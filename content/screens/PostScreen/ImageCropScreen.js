@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
+  Alert,
 } from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -40,7 +41,21 @@ const ImageCropScreen = ({ navigation, route }) => {
       });
       setCroppedImage(cropped);
     } catch (error) {
-      console.log('Crop cancelled:', error);
+      
+      // Check if user cancelled
+      if (error.code === 'E_PICKER_CANCELLED') {
+        // User cancelled - no alert needed
+        return;
+      }
+      
+      // Show error for actual failures
+      let errorMessage = 'Failed to crop image. Please try again.';
+      
+      if (error.message && typeof error.message === 'string') {
+        errorMessage = error.message;
+      }
+      
+      Alert.alert('Crop Failed', errorMessage);
     }
   };
 

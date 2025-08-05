@@ -40,6 +40,7 @@ const SignupScreen = ({ route, resetToLogin }) => {
     try {
       onPress: () => navigation.navigate('Login');
       const result = await signup(fullname.trim(), username.trim(), password, phone);
+      console.log("Signup result:", result);
       
       if (result.success) {
         Alert.alert(
@@ -55,7 +56,6 @@ const SignupScreen = ({ route, resetToLogin }) => {
       } else {
         Alert.alert('Signup Failed', result.error);
       }
-      console.log("SignupApi");
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
       console.error('Signup error:', error);

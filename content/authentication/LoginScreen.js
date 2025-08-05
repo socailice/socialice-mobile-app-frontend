@@ -17,12 +17,12 @@ const handleLogin = async () => {
 
   try {
     const result = await login(phone, password);
+    console.log("Login result:", result);
 
     if (result.success) {
-      mmkvStorage.setItem('token', result.data);
+      mmkvStorage.setItem('token', result?.data);
       setIsLoggedIn(true);
       navigation.navigate('Main'); 
-      console.log("LoginApi");
     } else {
       Alert.alert('Error', result.error);
     }

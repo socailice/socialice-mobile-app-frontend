@@ -35,9 +35,6 @@ export const login = async (phone, password) => {
 export const signup = async (fullname, username, password, phone) => {
   try {
     const url = API_CONFIG.BASE_URL + "/socialice/auth/register";
-    console.log("Making request to:", url);
-    console.log("Request body:", { fullname, username, phone: Number(phone), password, friends: [] });
-
     const response = await fetch(url, {
       method: 'POST',
       headers: API_CONFIG.HEADERS,
@@ -49,7 +46,6 @@ export const signup = async (fullname, username, password, phone) => {
       }),
     });
 
-    console.log("Response status:", response.status);
 
     let data;
     try {

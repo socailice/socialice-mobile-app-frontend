@@ -81,7 +81,7 @@ const HomeScreen = () => {
   }, []);
 
   const handleDotsPress = useCallback((postId) => {
-    console.log('Dots pressed for post:', postId);
+// Add your logic for handling dots press here
   }, []);
 
   const getSelectedPostComments = useMemo(() => {

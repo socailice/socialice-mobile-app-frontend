@@ -31,12 +31,10 @@ const OtpScreen = () => {
       return;
     }
     setPhoneError('');
-    console.log('Sending OTP to:', phone);
     setOtpSent(true);
   };
 
   const verifyOtp = () => {
-    console.log('Verifying OTP:', otp);
     navigation.navigate('SignUp', { phone: phone });
 
   };

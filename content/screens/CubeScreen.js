@@ -66,11 +66,11 @@ export default CubeScreen = () => {
   };
 
   const handleAcceptRequest = (userId) => {
-    console.log('Accept request for user:', userId);
+    // Add your accept request logic here
   };
 
   const handleRejectRequest = (userId) => {
-    console.log('Reject request for user:', userId);
+    // Add your reject request logic here
   };
 
   const renderRequestItem = ({ item, isSearchResult = false }) => (
