@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../utils/styles/colors';
-import { ProfileApi } from './api/Api';
+import { ProfileApi } from './api/GetApi';
 import ProfileStyles from '../utils/styles/ProfileStyles';  
 
 const GRID_COLUMNS = 3;

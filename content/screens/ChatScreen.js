@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 import ChatStyles from '../utils/styles/ChatStyles';
-import { ChatScreenApi } from './api/Api';
+import { ChatScreenApi } from './api/GetApi';
 
 
 const ChatScreen = ({ navigation }) => {

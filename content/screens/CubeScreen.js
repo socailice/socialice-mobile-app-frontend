@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   TextInput,
 } from 'react-native';
-import { cubes, searchCubes } from './api/Api';
+import { cubes, searchCubes } from './api/GetApi';
 import colors from '../utils/styles/colors';
 import CubeStyles from '../utils/styles/CubeStyles';
 

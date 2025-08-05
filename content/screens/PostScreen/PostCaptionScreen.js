@@ -13,35 +13,59 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostStyles from '../../utils/styles/PostStyles';
+import { uploadImage } from '../../utils/conifg/CloudinaryService';
 
 const PostCaptionScreen = ({ navigation, route }) => {
   const { imageData } = route.params;
   const [caption, setCaption] = useState('');
   const [isPosting, setIsPosting] = useState(false);
 
-  // Navigation Functions
   const handleBack = () => {
-    navigation.pop(2); // Go back 2 screens to MediaSelection
+    navigation.pop(2);
   };
-
-  const handlePost = async () => {
-    setIsPosting(true);
+const handlePost = async () => {
+  setIsPosting(true);
+  
+  try {
+    console.log('Image URI:', imageData.path || imageData.uri);
     
-    // Simulate posting
-    setTimeout(() => {
-      Alert.alert(
-        'Posted!', 
-        'Your post has been shared successfully.',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('Main')
-          }
-        ]
-      );
-      setIsPosting(false);
-    }, 1500);
-  };
+    const imageUrl = await uploadImage(imageData.uri || imageData.path);
+    console.log('Image uploaded successfully:', imageUrl);
+          
+    const postData = {
+      caption: caption,
+      imageUrl: imageUrl,
+    };
+    
+    Alert.alert('Success', 'Your post has been shared successfully!', [
+      { text: 'OK', onPress: () => navigation.navigate('Main') }
+    ]);
+    
+  } catch (error) {
+    console.error('Upload failed:', error);
+    
+    let message = 'Upload failed. Please try again.';
+    
+    try {
+      if (error && typeof error === 'object') {
+        if (typeof error.message === 'string') {
+          message = error.message;
+        } else if (error.message && typeof error.message === 'object') {
+          message = 'Upload failed. Please check your connection and try again.';
+        } else if (typeof error === 'string') {
+          message = error;
+        }
+      }
+    } catch (stringifyError) {
+      console.error('Error while processing error message:', stringifyError);
+      message = 'Upload failed. Please try again.';
+    }
+    
+    Alert.alert('Upload Failed', message);
+  } finally {
+    setIsPosting(false);
+  }
+};
 
   return (
     <SafeAreaView style={PostStyles.container}>
@@ -49,7 +73,6 @@ const PostCaptionScreen = ({ navigation, route }) => {
         style={PostStyles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* Header */}
         <View style={PostStyles.header}>
           <TouchableOpacity style={PostStyles.headerButton} onPress={handleBack}>
             <Ionicons name="arrow-back" size={24} color="#000" />
@@ -64,13 +87,11 @@ const PostCaptionScreen = ({ navigation, route }) => {
               PostStyles.headerButtonText,
               isPosting && PostStyles.headerButtonDisabled
             ]}>
-              {isPosting ? 'Posting...' : 'Post'}
+              {isPosting ? 'Uploading...' : 'Post'}
             </Text>
           </TouchableOpacity>
         </View>
-
         <ScrollView style={PostStyles.content}>
-          {/* Post Composition */}
           <View style={PostStyles.postRow}>
             <Image 
               source={{ uri: imageData.path || imageData.uri }} 
@@ -86,7 +107,6 @@ const PostCaptionScreen = ({ navigation, route }) => {
               maxLength={280}
             />
           </View>
-
           <View style={PostStyles.characterCount}>
             <Text style={PostStyles.characterCountText}>
               {caption.length}/280

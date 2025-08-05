@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import styles from '../utils/styles/HomeStyles';
 import Comments from '../components/Comments';
-import {globalFeed} from './api/Api';
+import {globalFeed} from './api/GetApi';
 import mmkvStorage from '../utils/storage/MmkvStorage';
 
 const formatTimeAgo = (dateString) => {
