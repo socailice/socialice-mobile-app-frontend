@@ -4,9 +4,6 @@ import API_CONFIG from '../../../settings';
 export async function globalFeed() {
   try {
     const response = await axios.get(`${API_CONFIG.BASE_URL}/socialice/posts/posts/paginated`);
-
-    console.log("Global Feed Response:", response.data);
-
     return response.data;
   } catch (error) {
     console.error(" Error fetching global feed:", error);
@@ -73,33 +70,32 @@ export function searchCubes(query = '') {
 }
 
 
-
-export function ProfileApi(){
-  return{
-  success: true,
-  message: 'Profile fetched successfully',
-  data: {
-    _Id: '12345',
-    username: 'social_alice',
-    fullname: 'Kush',
-    profilePic: 'https://picsum.photos/200',
-    isSocialiced: false,
-    stats: {
-      socialiced: 208,
-      hammers: 365,
-    },
-    posts: [
-      { id: 'post_001', imageUrl: 'https://picsum.photos/201' },
-      { id: 'post_002', imageUrl: 'https://picsum.photos/202' },
-      { id: 'post_003', imageUrl: 'https://picsum.photos/203' },
-      { id: 'post_004', imageUrl: 'https://picsum.photos/204' },
-      { id: 'post_005', imageUrl: 'https://picsum.photos/205' },
-      { id: 'post_006', imageUrl: 'https://picsum.photos/206' },
-    ],
-  },
-}};
-
-
+export async function ProfileApi(userId) {
+  if (!userId) {
+    return {
+      success: false,
+      message: 'No userId provided',
+      data: null,
+    };
+  }
+  try {
+    const response = await axios.get(
+      `${API_CONFIG.BASE_URL}/socialice/profile/profile/${userId}`
+    );
+    return {
+      success: true,
+      message: 'Profile fetched successfully',
+      data: response.data,
+    };
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    return {
+      success: false,
+      message: 'Failed to fetch profile',
+      data: null,
+    };
+  }
+}
 
 export function ChatScreenApi(){
   return{

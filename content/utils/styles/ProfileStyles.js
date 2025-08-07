@@ -62,7 +62,7 @@ const ProfileStyles = StyleSheet.create({
     color: colors.primaryText,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: 20,
     color: colors.secondaryText,
   },
   socialiceButton: {

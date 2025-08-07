@@ -75,7 +75,6 @@ const [feedData, setFeedData] = useState([]);
   const fetchFeed = async () => {
     try {
       const response = await globalFeed();
-      console.log('Global Feed:', response);
       if (response?.success && Array.isArray(response.data)) {
         setFeedData(response.data);
       }

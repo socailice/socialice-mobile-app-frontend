@@ -17,7 +17,6 @@ const handleLogin = async () => {
 
   try {
     const result = await login(phone, password);
-    console.log("Login result:", result?.data?.user);
 
     if (result.success) {
       mmkvStorage.setItem('token', result?.data);

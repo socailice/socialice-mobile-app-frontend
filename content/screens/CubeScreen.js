@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TextInput,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { cubes, searchCubes } from './api/GetApi';
 import colors from '../utils/styles/colors';
 import CubeStyles from '../utils/styles/CubeStyles';
@@ -16,6 +17,7 @@ export default CubeScreen = () => {
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const data = cubes();
@@ -33,7 +35,6 @@ export default CubeScreen = () => {
 
   const formatTimeAgo = (dateString) => {
     if (!dateString) return '';
-    
     try {
       const now = new Date();
       const requestDate = new Date(dateString);
@@ -73,19 +74,28 @@ export default CubeScreen = () => {
     // Add your reject request logic here
   };
 
+  const handleUserPress = (userId) => {
+    navigation.navigate('Profile', { userId });
+  };
+
   const renderRequestItem = ({ item, isSearchResult = false }) => (
     <View style={CubeStyles.requestItem}>
-      <View style={CubeStyles.leftSection}>
+      <TouchableOpacity
+        style={CubeStyles.leftSection}
+        onPress={() => handleUserPress(item?._id || item?._Id)}
+        activeOpacity={0.7}
+      >
         <View style={CubeStyles.avatar}>
           <Text style={CubeStyles.avatarText}>{getInitials(item?.username)}</Text>
         </View>
         <View style={CubeStyles.userInfo}>
           <Text style={CubeStyles.username}>{item?.username || 'Unknown'}</Text>
           <Text style={CubeStyles.mutualCubes}>
-            {item?.mutualCubes || 0} mutual cubes{isSearchResult ? '' : ` · ${formatTimeAgo(item?.requestedAt)}`}
+            {item?.mutualCubes || 0} mutual cubes
+            {isSearchResult ? '' : ` · ${formatTimeAgo(item?.requestedAt)}`}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
       <View style={CubeStyles.actionButtons}>
         <TouchableOpacity
           style={CubeStyles.acceptButton}
@@ -108,7 +118,6 @@ export default CubeScreen = () => {
   if (isSearchMode) {
     return (
       <SafeAreaView style={CubeStyles.container}>
-        
         <View style={CubeStyles.searchHeader}>
           <TouchableOpacity style={CubeStyles.backButton} onPress={handleBackToMain}>
             <Text style={CubeStyles.backArrow}>←</Text>
@@ -138,15 +147,13 @@ export default CubeScreen = () => {
 
   return (
     <SafeAreaView style={CubeStyles.container}>
-      
       <View style={CubeStyles.header}>
         <View style={CubeStyles.card}>
-        <Text style={CubeStyles.totalCubesNumber}>{cubeData?.totalCubes || 0}</Text>
-        <Text style={CubeStyles.totalCubesLabel}>Total Cubes</Text>
-        
-        <TouchableOpacity style={CubeStyles.findCubesButton} onPress={handleFindCubes}>
-          <Text style={CubeStyles.findCubesText}>Find Cubes</Text>
-        </TouchableOpacity>
+          <Text style={CubeStyles.totalCubesNumber}>{cubeData?.totalCubes || 0}</Text>
+          <Text style={CubeStyles.totalCubesLabel}>Total Cubes</Text>
+          <TouchableOpacity style={CubeStyles.findCubesButton} onPress={handleFindCubes}>
+            <Text style={CubeStyles.findCubesText}>Find Cubes</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -155,7 +162,6 @@ export default CubeScreen = () => {
           <Text style={CubeStyles.requestsTitle}>Cube Requests</Text>
           <Text style={CubeStyles.requestsCount}>{cubeData?.cubeRequests?.length || 0}</Text>
         </View>
-        
         <FlatList
           data={cubeData?.cubeRequests || []}
           renderItem={renderRequestItem}
@@ -165,5 +171,4 @@ export default CubeScreen = () => {
         />
       </View>
     </SafeAreaView>
-  );
-};
+  );}

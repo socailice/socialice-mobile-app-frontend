@@ -15,18 +15,25 @@ import ProfileStyles from '../utils/styles/ProfileStyles';
 const GRID_COLUMNS = 3;
 
 
-const ProfileComponent = () => {
+const ProfileComponent = ({ userId }) => {
   const navigation = useNavigation();
   const [profile, setProfile] = useState(null);
   const [isSocialiced, setIsSocialiced] = useState(false);
 
   useEffect(() => {
-    const response = ProfileApi();
-    if (response?.success) {
-      setProfile(response?.data || {});
-      setIsSocialiced(response?.data?.isSocialiced || false);
-    }
-  }, []);
+    let isMounted = true;
+    ProfileApi(userId).then((response) => {
+      if (isMounted) {
+        if (response?.success) {
+          setProfile(response?.data || {});
+          setIsSocialiced(response?.data?.isSocialiced || false);
+        } else {
+          setProfile(null);
+        }
+      }
+    });
+    return () => { isMounted = false; };
+  }, [userId]);
 
   const toggleSocialice = () => {
     setIsSocialiced((prev) => !prev);

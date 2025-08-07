@@ -9,9 +9,10 @@ import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import colors from '../utils/styles/colors';
 
+import mmkvStorage from '../utils/storage/MmkvStorage';
+
 const Tab = createBottomTabNavigator();
 
-// Simple component that navigates to post flow when mounted
 const PostButton = ({ navigation, route }) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -26,6 +27,11 @@ const PostButton = ({ navigation, route }) => {
   }, [navigation, route]);
   
   return <View style={{ flex: 1, backgroundColor: colors.crystalWhite }} />;
+};
+
+const ProfileScreenWrapper = (props) => {
+  const userId = mmkvStorage.getItem('token')?.user?._id;
+  return <ProfileScreen {...props} userId={userId} />;
 };
 
 const BottomNavigator = () => {
@@ -72,7 +78,7 @@ const BottomNavigator = () => {
         <Tab.Screen name="Cube" component={CubeScreen} />
         <Tab.Screen name="Post" component={PostButton} />
         <Tab.Screen name="Chat" component={ChatScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreenWrapper} />
       </Tab.Navigator>
     </View>
   );
