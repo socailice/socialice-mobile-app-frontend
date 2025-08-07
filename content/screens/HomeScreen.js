@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo,useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,22 +11,9 @@ import Comments from '../components/Comments';
 import {globalFeed} from './api/GetApi';
 import mmkvStorage from '../utils/storage/MmkvStorage';
 
-const formatTimeAgo = (dateString) => {
-  const now = new Date();
-  const postDate = new Date(dateString);
-  const diffInHours = Math.floor((now - postDate) / (1000 * 60 * 60));
-  
-  if (diffInHours < 1) return 'now';
-  if (diffInHours < 24) return `${diffInHours}h`;
-  
-  const diffInDays = Math.floor(diffInHours / 24);
-  if (diffInDays < 7) return `${diffInDays}d`;
-  
-  return `${Math.floor(diffInDays / 7)}w`;
-};
 
 const HomeScreen = () => {
-  const [feedData, setFeedData] = useState(globalFeed()?.data);
+const [feedData, setFeedData] = useState([]);
   const [commentsVisible, setCommentsVisible] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
 
@@ -83,6 +70,23 @@ const HomeScreen = () => {
   const handleDotsPress = useCallback((postId) => {
 // Add your logic for handling dots press here
   }, []);
+
+  useEffect(() => {
+  const fetchFeed = async () => {
+    try {
+      const response = await globalFeed();
+      console.log('Global Feed:', response);
+      if (response?.success && Array.isArray(response.data)) {
+        setFeedData(response.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch feed:', err);
+    }
+  };
+
+  fetchFeed();
+}, []);
+
 
   const getSelectedPostComments = useMemo(() => {
     if (!selectedPostId) return [];
