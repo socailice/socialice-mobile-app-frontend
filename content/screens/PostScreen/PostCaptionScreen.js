@@ -14,6 +14,10 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostStyles from '../../utils/styles/PostStyles';
 import { uploadImage } from '../../utils/conifg/CloudinaryService';
+import { createPost } from '../api/PostApi';
+import mmkvStorage from '../../utils/storage/MmkvStorage';
+
+const userId = mmkvStorage.getItem('token')?.user?._id;
 
 const PostCaptionScreen = ({ navigation, route }) => {
   const { imageData } = route.params;
@@ -25,45 +29,36 @@ const PostCaptionScreen = ({ navigation, route }) => {
   };
 const handlePost = async () => {
   setIsPosting(true);
-  
+
   try {
-    
     const imageUrl = await uploadImage(imageData.uri || imageData.path);
-          
-    const postData = {
-      caption: caption,
-      imageUrl: imageUrl,
-    };
-    
-    Alert.alert('Success', 'Your post has been shared successfully!', [
-      { text: 'OK', onPress: () => navigation.navigate('Main') }
-    ]);
-    
+
+    const result = await createPost(userId, imageUrl, caption);
+
+    if (result.success) {
+      Alert.alert('Success', 'Your post has been shared successfully!', [
+        { text: 'OK', onPress: () => navigation.navigate('Main') },
+      ]);
+    } else {
+      throw new Error(result.error);
+    }
+
   } catch (error) {
     console.error('Upload failed:', error);
-    
+
     let message = 'Upload failed. Please try again.';
-    
-    try {
-      if (error && typeof error === 'object') {
-        if (typeof error.message === 'string') {
-          message = error.message;
-        } else if (error.message && typeof error.message === 'object') {
-          message = 'Upload failed. Please check your connection and try again.';
-        } else if (typeof error === 'string') {
-          message = error;
-        }
-      }
-    } catch (stringifyError) {
-      console.error('Error while processing error message:', stringifyError);
-      message = 'Upload failed. Please try again.';
+    if (typeof error === 'string') {
+      message = error;
+    } else if (error?.message) {
+      message = error.message;
     }
-    
+
     Alert.alert('Upload Failed', message);
   } finally {
     setIsPosting(false);
   }
 };
+
 
   return (
     <SafeAreaView style={PostStyles.container}>

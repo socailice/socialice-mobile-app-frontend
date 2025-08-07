@@ -1,12 +1,13 @@
 import API_CONFIG from "../../../settings";
 
 export const login = async (phone, password) => {
+  console.log("Login attempt with phone:", phone, "and password:", password);
   try {
     const response = await fetch(API_CONFIG.BASE_URL + "/socialice/auth/login", {
       method: 'POST',
       headers: API_CONFIG.HEADERS,
       body: JSON.stringify({
-        phone: phone,
+        username: phone,
         password: password,
       }),
     });

@@ -17,7 +17,7 @@ const handleLogin = async () => {
 
   try {
     const result = await login(phone, password);
-    console.log("Login result:", result);
+    console.log("Login result:", result?.data?.user);
 
     if (result.success) {
       mmkvStorage.setItem('token', result?.data);
@@ -42,12 +42,11 @@ const handleLogin = async () => {
       <Text style={StyleSheet.flatten([styles.authTitle])}>Login</Text>
 
       <TextInput
-        placeholder="Phone Number"
+        placeholder="User Number"
         value={phone}
         onChangeText={setPhone}
         placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
-        keyboardType="phone-pad"
       />
 
       <TextInput
