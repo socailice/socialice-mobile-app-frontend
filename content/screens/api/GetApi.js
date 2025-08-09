@@ -33,29 +33,17 @@ export async function cubes(userId) {
 }
 
 
-export function searchCubes(query = '') {
-  const allUsers = [
-    { "_Id": "usr_001", "username": "Crystal_Heart", "mutualCubes": 15 },
-    { "_Id": "usr_002", "username": "CrystallineSoul", "mutualCubes": 3 },
-    { "_Id": "usr_003", "username": "IcyDreamer", "mutualCubes": 8 },
-    { "_Id": "usr_004", "username": "FrostBite", "mutualCubes": 22 },
-    { "_Id": "usr_005", "username": "WinterWonder", "mutualCubes": 7 },
-    { "_Id": "usr_006", "username": "SnowFlake", "mutualCubes": 18 },
-    { "_Id": "usr_007", "username": "GlacialMind", "mutualCubes": 11 },
-    { "_Id": "usr_008", "username": "ArcticSoul", "mutualCubes": 25 },
-    { "_Id": "usr_009", "username": "BlizzardHeart", "mutualCubes": 6 },
-    { "_Id": "usr_010", "username": "ChilledVibes", "mutualCubes": 14 }
-  ];
-
-  if (!query || query.trim() === '') {
-    return { "results": [] };
+export async function searchCubes(query, userId) {
+  try {
+    const response = await axios.get(
+      `${API_CONFIG.BASE_URL}/socialice/cubes/search`,
+      { params: { query, user_id: userId } }
+    );
+    return response?.data?.results || [];
+  } catch (error) {
+    console.error("Error searching cubes:", error);
+    return { results: [] };
   }
-  
-  const filteredUsers = allUsers.filter(user => 
-    user.username.toLowerCase().includes(query.toLowerCase())
-  );
-  
-  return { "results": filteredUsers };
 }
 
 

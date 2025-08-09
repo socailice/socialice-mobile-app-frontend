@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { cubes, searchCubes } from './api/GetApi';
-import colors from '../utils/styles/colors';
 import CubeStyles from '../utils/styles/CubeStyles';
+import colors from '../utils/styles/colors';
 import mmkvStorage from '../utils/storage/MmkvStorage';
 
-export default CubeScreen = () => {
-  const userId =  mmkvStorage.getItem('token')?.user?._id;
+const CubeScreen = () => {
+  const userId = mmkvStorage.getItem('token')?.user?._id;
   const [cubeData, setCubeData] = useState({ totalCubes: 0, cubeRequests: [] });
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,71 +23,36 @@ export default CubeScreen = () => {
 
   useEffect(() => {
     async function fetchCubes() {
-      try {
-        const data = await cubes(userId);
-        setCubeData(data || { totalCubes: 0, cubeRequests: [] });
-      } catch (error) {
-        setCubeData({ totalCubes: 0, cubeRequests: [] });
-      }
+      const data = await cubes(userId);
+      setCubeData(data || { totalCubes: 0, cubeRequests: [] });
     }
     fetchCubes();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
-    if (searchQuery?.trim()) {
-      const results = searchCubes(searchQuery);
-      setSearchResults(results?.results || []);
-    } else {
-      setSearchResults([]);
-    }
-  }, [searchQuery]);
-
-  const formatTimeAgo = (dateString) => {
-    if (!dateString) return '';
-    try {
-      const now = new Date();
-      const requestDate = new Date(dateString);
-      const diffInHours = Math.floor((now - requestDate) / (1000 * 60 * 60));
-      const diffInDays = Math.floor(diffInHours / 24);
-
-      if (diffInDays > 0) {
-        return `${diffInDays}d ago`;
+    async function fetchSearchResults() {
+      if (searchQuery.trim()) {
+        const results = await searchCubes(searchQuery, userId);
+        setSearchResults(results || []);
       } else {
-        return `${diffInHours}h ago`;
+        setSearchResults([]);
       }
-    } catch (error) {
-      console.warn('Error formatting date:', error);
-      return '';
     }
-  };
+    fetchSearchResults();
+  }, [searchQuery, userId]);
 
-  const getInitials = (username) => {
-    return username?.charAt(0)?.toUpperCase() || '?';
-  };
-
-  const handleFindCubes = () => {
-    setIsSearchMode(true);
-  };
-
+  const handleFindCubes = () => setIsSearchMode(true);
   const handleBackToMain = () => {
     setIsSearchMode(false);
     setSearchQuery('');
     setSearchResults([]);
   };
 
-  const handleAcceptRequest = (userId) => {
-    // Add your accept request logic here
-  };
-
-  const handleRejectRequest = (userId) => {
-    // Add your reject request logic here
-  };
-
   const handleUserPress = (userId) => {
     navigation.navigate('Profile', { userId });
   };
 
-  const renderRequestItem = ({ item, isSearchResult = false }) => (
+  const renderRequestItem = ({ item }) => (
     <View style={CubeStyles.requestItem}>
       <TouchableOpacity
         style={CubeStyles.leftSection}
@@ -95,34 +60,19 @@ export default CubeScreen = () => {
         activeOpacity={0.7}
       >
         <View style={CubeStyles.avatar}>
-          <Text style={CubeStyles.avatarText}>{getInitials(item?.username)}</Text>
+          <Text style={CubeStyles.avatarText}>
+            {item?.username?.charAt(0)?.toUpperCase() || '?'}
+          </Text>
         </View>
         <View style={CubeStyles.userInfo}>
           <Text style={CubeStyles.username}>{item?.username || 'Unknown'}</Text>
           <Text style={CubeStyles.mutualCubes}>
             {item?.mutualCubes || 0} mutual cubes
-            {isSearchResult ? '' : ` · ${formatTimeAgo(item?.requestedAt)}`}
           </Text>
         </View>
       </TouchableOpacity>
-      <View style={CubeStyles.actionButtons}>
-        <TouchableOpacity
-          style={CubeStyles.acceptButton}
-          onPress={() => handleAcceptRequest(item?._id || item?._Id)}
-        >
-          <Text style={CubeStyles.checkMark}>✓</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={CubeStyles.rejectButton}
-          onPress={() => handleRejectRequest(item?._id || item?._Id)}
-        >
-          <Text style={CubeStyles.xMark}>×</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
-
-  const renderSearchResult = ({ item }) => renderRequestItem({ item, isSearchResult: true });
 
   if (isSearchMode) {
     return (
@@ -140,11 +90,10 @@ export default CubeScreen = () => {
             autoFocus
           />
         </View>
-
         <View style={CubeStyles.searchResults}>
           <FlatList
             data={searchResults || []}
-            renderItem={renderSearchResult}
+            renderItem={renderRequestItem}
             keyExtractor={(item) => item?._Id || item?._id || Math.random().toString()}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={CubeStyles.listContainer}
@@ -165,7 +114,6 @@ export default CubeScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
-
       <View style={CubeStyles.requestsSection}>
         <View style={CubeStyles.requestsHeader}>
           <Text style={CubeStyles.requestsTitle}>Cube Requests</Text>
@@ -181,4 +129,6 @@ export default CubeScreen = () => {
       </View>
     </SafeAreaView>
   );
-}
+};
+
+export default CubeScreen;
