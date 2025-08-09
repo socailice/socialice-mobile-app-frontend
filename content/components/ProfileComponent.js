@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import colors from '../utils/styles/colors';
 import { ProfileApi } from '../screens/api/GetApi';
 import ProfileStyles from '../utils/styles/ProfileStyles';  
+import mmkvStorage from '../utils/storage/MmkvStorage';
 
 const GRID_COLUMNS = 3;
 
@@ -77,6 +78,7 @@ const ProfileComponent = ({ userId }) => {
           </View>
         </View>
 
+{(userId===mmkvStorage.getItem('token')?.user?._id)? null:
         <TouchableOpacity
           style={[
             ProfileStyles.socialiceButton,
@@ -87,7 +89,7 @@ const ProfileComponent = ({ userId }) => {
           <Text style={ProfileStyles.buttonText}>
             {isSocialiced ? 'Socialiced' : 'Socialice?'}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
 
       <FlatList
