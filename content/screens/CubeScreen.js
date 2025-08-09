@@ -56,7 +56,7 @@ const CubeScreen = () => {
     <View style={CubeStyles.requestItem}>
       <TouchableOpacity
         style={CubeStyles.leftSection}
-        onPress={() => handleUserPress(item?._id || item?._Id)}
+        onPress={() => handleUserPress(item?._Id || item?._id)}
         activeOpacity={0.7}
       >
         <View style={CubeStyles.avatar}>
