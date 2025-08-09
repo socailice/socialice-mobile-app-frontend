@@ -52,11 +52,57 @@ const CubeScreen = () => {
     navigation.navigate('Profile', { userId });
   };
 
+  const handleAcceptRequest = (userId) => {
+    // Accept logic here
+  };
+
+  const handleRejectRequest = (userId) => {
+    // Reject logic here
+  };
+
+  // Request item with accept/reject buttons
   const renderRequestItem = ({ item }) => (
     <View style={CubeStyles.requestItem}>
       <TouchableOpacity
         style={CubeStyles.leftSection}
-        onPress={() => handleUserPress(item?._Id || item?._id)}
+        onPress={() => handleUserPress(item?._id || item?._Id)}
+        activeOpacity={0.7}
+      >
+        <View style={CubeStyles.avatar}>
+          <Text style={CubeStyles.avatarText}>
+            {item?.username?.charAt(0)?.toUpperCase() || '?'}
+          </Text>
+        </View>
+        <View style={CubeStyles.userInfo}>
+          <Text style={CubeStyles.username}>{item?.username || 'Unknown'}</Text>
+          <Text style={CubeStyles.mutualCubes}>
+            {item?.mutualCubes || 0} mutual cubes
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <View style={CubeStyles.actionButtons}>
+        <TouchableOpacity
+          style={CubeStyles.acceptButton}
+          onPress={() => handleAcceptRequest(item?._id || item?._Id)}
+        >
+          <Text style={CubeStyles.checkMark}>✓</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={CubeStyles.rejectButton}
+          onPress={() => handleRejectRequest(item?._id || item?._Id)}
+        >
+          <Text style={CubeStyles.xMark}>×</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  // Search result item without accept/reject buttons
+  const renderSearchResultItem = ({ item }) => (
+    <View style={CubeStyles.requestItem}>
+      <TouchableOpacity
+        style={CubeStyles.leftSection}
+        onPress={() => handleUserPress(item?._id || item?._Id)}
         activeOpacity={0.7}
       >
         <View style={CubeStyles.avatar}>
@@ -93,7 +139,7 @@ const CubeScreen = () => {
         <View style={CubeStyles.searchResults}>
           <FlatList
             data={searchResults || []}
-            renderItem={renderRequestItem}
+            renderItem={renderSearchResultItem}
             keyExtractor={(item) => item?._Id || item?._id || Math.random().toString()}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={CubeStyles.listContainer}
