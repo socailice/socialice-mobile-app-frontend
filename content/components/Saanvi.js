@@ -6,22 +6,28 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../utils/styles/colors';
-import { ProfileApi } from '../screens/api/GetApi';
-import { sendSocialiceRequest } from '../screens/api/PostApi';
-import ProfileStyles from '../utils/styles/ProfileStyles';
+import { 
+  ProfileApi, 
+  sendSocialiceRequest, 
+  cancelSocialiceRequest 
+} from '../screens/api/GetApi';
+import ProfileStyles from '../utils/styles/ProfileStyles';  
 import mmkvStorage from '../utils/storage/MmkvStorage';
 
 const GRID_COLUMNS = 3;
 
 const ProfileComponent = ({ userId }) => {
   const navigation = useNavigation();
+  const currentUserId = mmkvStorage.getItem('token')?.user?._id;
   const [profile, setProfile] = useState(null);
   const [isSocialiced, setIsSocialiced] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const currentUserId = mmkvStorage.getItem('token')?.user?._id;
+  const isOwnProfile = userId === currentUserId;
 
   useEffect(() => {
     let isMounted = true;
@@ -29,35 +35,86 @@ const ProfileComponent = ({ userId }) => {
       if (isMounted) {
         if (response?.success) {
           setProfile(response?.data || {});
-          setIsSocialiced(response?.data?.isSocialiced ?? null);
+          setIsSocialiced(response?.data?.isSocialiced);
         } else {
           setProfile(null);
         }
       }
     });
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [userId]);
 
-  console.log("Profile:", profile);
+  const handleSocialiceAction = async () => {
+    if (isLoading) return;
+    
+    setIsLoading(true);
+    
+    try {
+      let response;
+      
+      if (isSocialiced === null || isSocialiced === false) {
+        // Send request
+        response = await sendSocialiceRequest(currentUserId, userId);
+        if (response.success) {
+          setIsSocialiced("pending");
+        } else {
+          Alert.alert("Error", response.error || "Failed to send request");
+        }
+      } else if (isSocialiced === "pending") {
+        // Cancel request
+        response = await cancelSocialiceRequest(currentUserId, userId);
+        if (response.success) {
+          setIsSocialiced(null);
+        } else {
+          Alert.alert("Error", response.error || "Failed to cancel request");
+        }
+      }
+    } catch (error) {
+      Alert.alert("Error", "Something went wrong");
+      console.error("Socialice action error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getSocialiceButtonText = () => {
+    if (isLoading) return "...";
+    
+    switch (isSocialiced) {
+      case null:
+      case false:
+        return "Socialice?";
+      case "pending":
+        return "Requested";
+      case true:
+        return "Socialiced";
+      default:
+        return "Socialice?";
+    }
+  };
+
+  const getSocialiceButtonStyle = () => {
+    const baseStyle = ProfileStyles.socialiceButton;
+    
+    switch (isSocialiced) {
+      case true:
+        return [baseStyle, { backgroundColor: colors.successGreen }];
+      case "pending":
+        return [baseStyle, { backgroundColor: colors.slateGray }];
+      default:
+        return baseStyle;
+    }
+  };
+
+  const isSocialiceButtonDisabled = () => {
+    return isLoading || isSocialiced === true;
+  };
 
   const handleLogout = () => {
     navigation.reset({
       index: 0,
       routes: [{ name: 'Login' }],
     });
-  };
-
-  const handleSocialice = async () => {
-    if (isSocialiced === null || isSocialiced === false) {
-      const res = await sendSocialiceRequest(currentUserId, userId);
-      if (res.success) {
-        setIsSocialiced(true);
-      } else {
-        console.log("Socialice request failed:", res.error);
-      }
-    }
   };
 
   const renderPost = ({ item }) => (
@@ -71,7 +128,7 @@ const ProfileComponent = ({ userId }) => {
       <TouchableOpacity style={ProfileStyles.logoutButton} onPress={handleLogout}>
         <Text style={ProfileStyles.logoutText}>Logout</Text>
       </TouchableOpacity>
-
+      
       <View style={ProfileStyles.profileTop}>
         <Image
           source={{ uri: profile?.profilePic }}
@@ -79,7 +136,7 @@ const ProfileComponent = ({ userId }) => {
         />
         <Text style={ProfileStyles.name}>{profile?.fullname}</Text>
         <Text style={ProfileStyles.username}>@{profile?.username}</Text>
-
+        
         <View style={ProfileStyles.statsRow}>
           <View style={ProfileStyles.statBox}>
             <Text style={ProfileStyles.statValue}>{profile?.stats?.hammers}</Text>
@@ -91,17 +148,14 @@ const ProfileComponent = ({ userId }) => {
           </View>
         </View>
 
-        {/* Socialice Button */}
-        {(userId === currentUserId || isSocialiced === true) ? null : (
+        {!isOwnProfile && (
           <TouchableOpacity
-            style={[
-              ProfileStyles.socialiceButton,
-              isSocialiced && { backgroundColor: colors.successGreen },
-            ]}
-            onPress={handleSocialice}
+            style={getSocialiceButtonStyle()}
+            onPress={handleSocialiceAction}
+            disabled={isSocialiceButtonDisabled()}
           >
             <Text style={ProfileStyles.buttonText}>
-              {isSocialiced ? 'Socialiced' : 'Socialice?'}
+              {getSocialiceButtonText()}
             </Text>
           </TouchableOpacity>
         )}

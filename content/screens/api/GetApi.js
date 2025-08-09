@@ -1,5 +1,6 @@
 import axios from 'axios';
 import API_CONFIG from '../../../settings';
+import mmkvStorage from '../../utils/storage/MmkvStorage';
 
 export async function globalFeed() {
   try {
@@ -46,8 +47,9 @@ export async function searchCubes(query, userId) {
   }
 }
 
-
 export async function ProfileApi(userId) {
+  const currentUserId = mmkvStorage.getItem('token')?.user?._id;
+
   if (!userId) {
     return {
       success: false,
@@ -55,10 +57,17 @@ export async function ProfileApi(userId) {
       data: null,
     };
   }
+
   try {
     const response = await axios.get(
-      `${API_CONFIG.BASE_URL}/socialice/profile/profile/${userId}`
+      `${API_CONFIG.BASE_URL}/socialice/profile/profile/${userId}`,
+      {
+        params: {
+          current_user_id: currentUserId,
+        },
+      }
     );
+
     return {
       success: true,
       message: 'Profile fetched successfully',
@@ -73,6 +82,7 @@ export async function ProfileApi(userId) {
     };
   }
 }
+
 
 export function ChatScreenApi(){
   return{
