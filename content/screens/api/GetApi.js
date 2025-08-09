@@ -17,31 +17,20 @@ export async function globalFeed() {
 }
 
 
-export function cubes() {   
-  return {   
-    "totalCubes": 127,   
-    "cubeRequests": [     
-      {       
-        "_id": "usr_234ad",
-        "username": "Alex_Frost",       
-        "mutualCubes": 12,       
-        "requestedAt": "2025-07-18T15:12:00Z"     
-      },     
-      {       
-        "_id": "usr_349ac",
-        "username": "Winter_Dreams",       
-        "mutualCubes": 8,       
-        "requestedAt": "2025-07-18T12:10:00Z"     
-      },     
-      {       
-        "_id": "usr_654aa",
-        "username": "Crystal_Heart",       
-        "mutualCubes": 15,       
-        "requestedAt": "2025-07-17T09:00:00Z"     
-      }   
-    ] 
-  }; 
-}   
+
+export async function cubes(userId) {
+  try {
+    const response = await axios.get(
+      `${API_CONFIG.BASE_URL}/socialice/cubes/dashboard/${userId}`,
+      { params: { user_id: userId } }
+    );
+    return response?.data;
+    
+  } catch (error) {
+    console.error("Error fetching cubes dashboard:", error);
+    return { totalCubes: 0, cubeRequests: [] };
+  }
+}
 
 
 export function searchCubes(query = '') {

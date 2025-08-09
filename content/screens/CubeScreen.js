@@ -11,8 +11,10 @@ import { useNavigation } from '@react-navigation/native';
 import { cubes, searchCubes } from './api/GetApi';
 import colors from '../utils/styles/colors';
 import CubeStyles from '../utils/styles/CubeStyles';
+import mmkvStorage from '../utils/storage/MmkvStorage';
 
 export default CubeScreen = () => {
+  const userId =  mmkvStorage.getItem('token')?.user?._id;
   const [cubeData, setCubeData] = useState({ totalCubes: 0, cubeRequests: [] });
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,8 +22,15 @@ export default CubeScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    const data = cubes();
-    setCubeData(data || { totalCubes: 0, cubeRequests: [] });
+    async function fetchCubes() {
+      try {
+        const data = await cubes(userId);
+        setCubeData(data || { totalCubes: 0, cubeRequests: [] });
+      } catch (error) {
+        setCubeData({ totalCubes: 0, cubeRequests: [] });
+      }
+    }
+    fetchCubes();
   }, []);
 
   useEffect(() => {
@@ -171,4 +180,5 @@ export default CubeScreen = () => {
         />
       </View>
     </SafeAreaView>
-  );}
+  );
+}
