@@ -8,6 +8,7 @@ import MessageScreen from '../screens/MessageScreen';
 import MediaSelectionScreen from '../screens/PostScreen/MediaSelectionScreen';
 import ImageCropScreen from '../screens/PostScreen/ImageCropScreen';
 import PostCaptionScreen from '../screens/PostScreen/PostCaptionScreen';
+import CubeProfileScreen from '../screens/CubeProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,8 @@ const StackNavigator = ({ setIsLoggedIn }) => {
         )}
       </Stack.Screen>
       <Stack.Screen name="OTP" component={OtpScreen} />
+      <Stack.Screen name="CubeProfile" component={CubeProfileScreen} /> 
+
       <Stack.Screen name="SignUp">
         {(props) => (
           <SignupScreen

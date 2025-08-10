@@ -17,6 +17,7 @@ import mmkvStorage from '../utils/storage/MmkvStorage';
 const GRID_COLUMNS = 3;
 
 const ProfileComponent = ({ userId }) => {
+  console.log('ProfileComponent userId:', userId);
   const navigation = useNavigation();
   const [profile, setProfile] = useState(null);
   const [isSocialiced, setIsSocialiced] = useState(null);
@@ -25,10 +26,10 @@ const ProfileComponent = ({ userId }) => {
 
   useEffect(() => {
     let isMounted = true;
-    ProfileApi(userId).then((response) => {
+    ProfileApi(userId).then(response => {
       if (isMounted) {
         if (response?.success) {
-          setProfile(response?.data || {});
+          setProfile(response?.data?.data || {});
           setIsSocialiced(response?.data?.isSocialiced ?? null);
         } else {
           setProfile(null);
@@ -38,9 +39,7 @@ const ProfileComponent = ({ userId }) => {
     return () => {
       isMounted = false;
     };
-  }, [userId]);
-
-  console.log("Profile:", profile);
+  }, [userId],[]);
 
   const handleLogout = () => {
     navigation.reset({
@@ -55,9 +54,13 @@ const ProfileComponent = ({ userId }) => {
       if (res.success) {
         setIsSocialiced(true);
       } else {
-        console.log("Socialice request failed:", res.error);
+        console.log('Socialice request failed:', res.error);
       }
     }
+  };
+
+  const handleEdit = () => {
+    //edit logic
   };
 
   const renderPost = ({ item }) => (
@@ -68,9 +71,13 @@ const ProfileComponent = ({ userId }) => {
 
   return (
     <ScrollView style={ProfileStyles.container}>
-      <TouchableOpacity style={ProfileStyles.logoutButton} onPress={handleLogout}>
+          {userId === currentUserId?(<> <TouchableOpacity
+        style={ProfileStyles.logoutButton}
+        onPress={handleLogout}
+      >
         <Text style={ProfileStyles.logoutText}>Logout</Text>
-      </TouchableOpacity>
+      </TouchableOpacity></>):null}
+     
 
       <View style={ProfileStyles.profileTop}>
         <Image
@@ -82,17 +89,27 @@ const ProfileComponent = ({ userId }) => {
 
         <View style={ProfileStyles.statsRow}>
           <View style={ProfileStyles.statBox}>
-            <Text style={ProfileStyles.statValue}>{profile?.stats?.hammers}</Text>
+            <Text style={ProfileStyles.statValue}>
+              {profile?.stats?.hammers}
+            </Text>
             <Text style={ProfileStyles.statLabel}>🔨 Hammers</Text>
           </View>
           <View style={ProfileStyles.statBox}>
-            <Text style={ProfileStyles.statValue}>{profile?.stats?.socialiced}</Text>
+            <Text style={ProfileStyles.statValue}>
+              {profile?.stats?.socialiced}
+            </Text>
             <Text style={ProfileStyles.statLabel}>🧊 Socialiced</Text>
           </View>
         </View>
 
-        {/* Socialice Button */}
-        {(userId === currentUserId || isSocialiced === true) ? null : (
+        {userId === currentUserId? (
+          <TouchableOpacity
+            style={ProfileStyles.socialiceButton}
+            onPress={handleEdit}
+          >
+            <Text style={ProfileStyles.buttonText}>Edit Profile</Text>
+          </TouchableOpacity>
+        ) : (
           <TouchableOpacity
             style={[
               ProfileStyles.socialiceButton,
@@ -111,7 +128,7 @@ const ProfileComponent = ({ userId }) => {
         data={profile.posts}
         numColumns={GRID_COLUMNS}
         renderItem={renderPost}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         scrollEnabled={false}
         contentContainerStyle={ProfileStyles.gridContainer}
       />

@@ -46,7 +46,6 @@ export const sendSocialiceRequest = async (fromUserId, toUserId) => {
   }
 };
 
-// Cancel socialice request
 export const cancelSocialiceRequest = async (fromUserId, toUserId) => {
   try {
     const response = await fetch(`${API_CONFIG.BASE_URL}/socialice/cubes/cancel`, {
@@ -64,11 +63,11 @@ export const cancelSocialiceRequest = async (fromUserId, toUserId) => {
       return { success: false, error: data?.message || "Cancel failed" };
     }
   } catch (error) {
+     console.log('Actual error:', error?.message); 
     return { success: false, error: error?.message || "Network error" };
   }
 };
 
-// Respond to socialice request
 export const respondToSocialiceRequest = async (fromUserId, toUserId, accepted) => {
   try {
     const response = await fetch(`${API_CONFIG.BASE_URL}/socialice/cubes/respond`, {

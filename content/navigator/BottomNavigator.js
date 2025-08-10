@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -16,7 +16,6 @@ const Tab = createBottomTabNavigator();
 const PostButton = ({ navigation, route }) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // Get the current tab name from the parent navigator
       const currentTab = route.name;
       navigation.navigate('PostFlow', { 
         screen: 'MediaSelection',
@@ -29,12 +28,24 @@ const PostButton = ({ navigation, route }) => {
   return <View style={{ flex: 1, backgroundColor: colors.crystalWhite }} />;
 };
 
-const ProfileScreenWrapper = (props) => {
-  const userId = mmkvStorage.getItem('token')?.user?._id;
-  return <ProfileScreen {...props} userId={userId} />;
-};
-
 const BottomNavigator = () => {
+  const [userId, setUserId] = useState(null);
+
+  const handleTabPress = useCallback(() => {
+    const newUserId = mmkvStorage.getItem('token')?.user?._id;
+    setUserId(newUserId);
+  }, []);
+
+  // Initialize userId on component mount
+  useEffect(() => {
+    const initialUserId = mmkvStorage.getItem('token')?.user?._id;
+    setUserId(initialUserId);
+  }, []);
+
+  const ProfileScreenWrapper = (props) => {
+    return <ProfileScreen {...props} userId={userId} />;
+  };
+
   return (
     <View style={styles.container}>
       <TopBar />
@@ -73,6 +84,9 @@ const BottomNavigator = () => {
             return <Ionicons name={iconName} size={24} color={color} />;
           },
         })}
+        screenListeners={{
+          tabPress: handleTabPress,
+        }}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Cube" component={CubeScreen} />

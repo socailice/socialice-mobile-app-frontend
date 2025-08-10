@@ -6,12 +6,14 @@ import {
   FlatList,
   SafeAreaView,
   TextInput,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { cubes, searchCubes } from './api/GetApi';
 import CubeStyles from '../utils/styles/CubeStyles';
 import colors from '../utils/styles/colors';
 import mmkvStorage from '../utils/storage/MmkvStorage';
+import {cancelSocialiceRequest, respondToSocialiceRequest} from './api/PostApi';
 
 const CubeScreen = () => {
   const userId = mmkvStorage.getItem('token')?.user?._id;
@@ -19,6 +21,7 @@ const CubeScreen = () => {
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [processingRequests, setProcessingRequests] = useState(new Set());
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -49,53 +52,133 @@ const CubeScreen = () => {
   };
 
   const handleUserPress = (userId) => {
-    navigation.navigate('Profile', { userId });
+    navigation.navigate('CubeProfile', { userId });
   };
 
-  const handleAcceptRequest = (userId) => {
-    // Accept logic here
+  // Remove request from local state after successful API call
+  const removeRequestFromState = (requestUserId) => {
+    setCubeData(prevData => ({
+      ...prevData,
+      cubeRequests: prevData.cubeRequests.filter(
+        request => (request._id || request._Id) !== requestUserId
+      )
+    }));
   };
 
-  const handleRejectRequest = (userId) => {
-    // Reject logic here
+  const handleAcceptRequest = async (toUserId) => {
+    // Prevent multiple clicks
+    if (processingRequests.has(toUserId)) {
+      return;
+    }
+    
+    setProcessingRequests(prev => new Set(prev).add(toUserId));
+    
+    try {
+      const result = await respondToSocialiceRequest(
+        toUserId, 
+        userId, 
+        true 
+      );
+      
+      if (result.success) {
+        // Remove request from UI immediately
+        removeRequestFromState(toUserId);
+        
+        Alert.alert('Success', 'Cube request accepted!');
+      } else {
+        Alert.alert('Error', result.error || 'Failed to accept request');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Network error occurred');
+    } finally {
+      setProcessingRequests(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(toUserId);
+        return newSet;
+      });
+    }
   };
 
-  // Request item with accept/reject buttons
-  const renderRequestItem = ({ item }) => (
-    <View style={CubeStyles.requestItem}>
-      <TouchableOpacity
-        style={CubeStyles.leftSection}
-        onPress={() => handleUserPress(item?._id || item?._Id)}
-        activeOpacity={0.7}
-      >
-        <View style={CubeStyles.avatar}>
-          <Text style={CubeStyles.avatarText}>
-            {item?.username?.charAt(0)?.toUpperCase() || '?'}
-          </Text>
-        </View>
-        <View style={CubeStyles.userInfo}>
-          <Text style={CubeStyles.username}>{item?.username || 'Unknown'}</Text>
-          <Text style={CubeStyles.mutualCubes}>
-            {item?.mutualCubes || 0} mutual cubes
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <View style={CubeStyles.actionButtons}>
+  const handleRejectRequest = async (toUserId) => {
+  
+    
+    try {
+      const result = await cancelSocialiceRequest(
+        toUserId,
+        userId
+      );
+      
+      if (result.success) {
+        // Remove request from UI immediately
+        removeRequestFromState(toUserId);
+        
+        Alert.alert('Success', 'Cube request rejected!');
+      } else {
+        Alert.alert('Error', result.error || 'Failed to reject request');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Network error occurred');
+    } finally {
+      setProcessingRequests(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(toUserId);
+        return newSet;
+      });
+    }
+  };
+
+  const renderRequestItem = ({ item }) => {
+    const itemId = item?._id || item?._Id;
+    const isProcessing = processingRequests.has(itemId);
+    
+    return (
+      <View style={CubeStyles.requestItem}>
         <TouchableOpacity
-          style={CubeStyles.acceptButton}
-          onPress={() => handleAcceptRequest(item?._id || item?._Id)}
+          style={CubeStyles.leftSection}
+          onPress={() => handleUserPress(itemId)}
+          activeOpacity={0.7}
         >
-          <Text style={CubeStyles.checkMark}>✓</Text>
+          <View style={CubeStyles.avatar}>
+            <Text style={CubeStyles.avatarText}>
+              {item?.username?.charAt(0)?.toUpperCase() || '?'}
+            </Text>
+          </View>
+          <View style={CubeStyles.userInfo}>
+            <Text style={CubeStyles.username}>{item?.username || 'Unknown'}</Text>
+            <Text style={CubeStyles.mutualCubes}>
+              {item?.mutualCubes || 0} mutual cubes
+            </Text>
+          </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={CubeStyles.rejectButton}
-          onPress={() => handleRejectRequest(item?._id || item?._Id)}
-        >
-          <Text style={CubeStyles.xMark}>×</Text>
-        </TouchableOpacity>
+        <View style={CubeStyles.actionButtons}>
+          <TouchableOpacity
+            style={[
+              CubeStyles.acceptButton, 
+              isProcessing && { opacity: 0.5 }
+            ]}
+            onPress={() => handleAcceptRequest(itemId)}
+            disabled={isProcessing}
+          >
+            <Text style={CubeStyles.checkMark}>
+              {isProcessing ? '...' : '✓'}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              CubeStyles.rejectButton, 
+              isProcessing && { opacity: 0.5 }
+            ]}
+            onPress={() => handleRejectRequest(itemId)}
+            disabled={isProcessing}
+          >
+            <Text style={CubeStyles.xMark}>
+              {isProcessing ? '...' : '×'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   // Search result item without accept/reject buttons
   const renderSearchResultItem = ({ item }) => (
