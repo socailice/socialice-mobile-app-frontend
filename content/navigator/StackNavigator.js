@@ -88,7 +88,7 @@ const StackNavigator = ({ setIsLoggedIn }) => {
   component={CommentsScreen}
   options={{
     headerShown: false, 
-    presentation: 'card', 
+    presentation: 'card',
   }}
 />
       <Stack.Screen name="ProfilePhotoUpdate" component={ProfilePhotoUpdateScreen} />
