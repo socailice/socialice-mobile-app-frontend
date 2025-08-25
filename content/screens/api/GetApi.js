@@ -110,3 +110,38 @@ export function ChatScreenApi(){
     ]
   }
 }  
+
+export async function fetchChats(username) {
+  if (!username) {
+    throw new Error('Username is required');
+  }
+
+  const response = await fetch(
+    `http://10.0.2.2:8000/socialice/chat/last-messages/${username}?limit=20`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error ${response.status}`);
+  }
+
+  const result = await response.json();
+  
+  if (!result?.success || !Array.isArray(result?.data)) {
+    throw new Error('Invalid data format');
+  }
+
+  return result.data.map((item) => ({
+    id: item?.userId || '',
+    name: item?.username || '',
+    avatar: item?.profilePic || '',
+    lastMessage: item?.lastMessage || '',
+    timestamp: item?.timestamp || '',
+    unreadCount: item?.unreadCount || 0,
+  }));
+}
