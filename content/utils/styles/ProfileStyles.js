@@ -70,7 +70,7 @@ const ProfileStyles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 10,
     borderRadius: 25,
-    marginTop: 10,
+    margin: 10,
   },
   buttonText: {
     color: colors.whiteText,
