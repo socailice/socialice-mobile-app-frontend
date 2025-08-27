@@ -7,6 +7,7 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  RefreshControl,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import ChatStyles from '../utils/styles/ChatStyles';
@@ -16,31 +17,39 @@ import { fetchChats } from './api/GetApi';
 const ChatScreen = ({ navigation }) => {
   const [chatList, setChatList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const currentUsername = mmkvStorage.getItem('token')?.user?.username || '';
 
-  async function loadChats() {
+  const loadChats = async (isRefresh = false) => {
     try {
       if (!currentUsername) return;
       
-      setLoading(true);
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+      
       const chats = await fetchChats(currentUsername);
       setChatList(chats);
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch chats');
-      console.error('Chat fetch error:', error);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
-  }
+  };
+
+  const onRefresh = () => loadChats(true);
 
   useEffect(() => {
     loadChats();
-  }, [currentUsername]);
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
       loadChats();
-    }, [currentUsername])
+    }, [])
   );
 
   const renderItem = ({ item }) => (
@@ -62,18 +71,25 @@ const ChatScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <View style={ChatStyles.container}>
-      {loading ? (
-        <ActivityIndicator size="large" color="#000" style={{ marginTop: 20 }} />
-      ) : (
-        <FlatList
-          data={chatList || []}
-          renderItem={renderItem}
-          keyExtractor={(item) => item?.id}
-          contentContainerStyle={{ paddingBottom: 20 }}
-        />
-      )}
+      <FlatList
+        data={chatList}
+        renderItem={renderItem}
+        keyExtractor={(item) => item?.id}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
     </View>
   );
 };
