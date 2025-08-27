@@ -63,7 +63,6 @@ export const cancelSocialiceRequest = async (fromUserId, toUserId) => {
       return { success: false, error: data?.message || "Cancel failed" };
     }
   } catch (error) {
-     console.log('Actual error:', error?.message); 
     return { success: false, error: error?.message || "Network error" };
   }
 };
