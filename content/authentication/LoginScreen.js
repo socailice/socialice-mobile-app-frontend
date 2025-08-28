@@ -41,7 +41,7 @@ const handleLogin = async () => {
       <Text style={StyleSheet.flatten([styles.authTitle])}>Login</Text>
 
       <TextInput
-        placeholder="User Number"
+        placeholder="User Name"
         value={phone}
         onChangeText={setPhone}
         placeholderTextColor={colors.placeholderText}
