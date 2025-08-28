@@ -17,12 +17,25 @@ import mmkvStorage from '../utils/storage/MmkvStorage';
 const GRID_COLUMNS = 3;
 
 const ProfileComponent = ({ userId }) => {
-  console.log('ProfileComponent userId:', userId);
   const navigation = useNavigation();
   const [profile, setProfile] = useState(null);
   const [isSocialiced, setIsSocialiced] = useState(null);
 
   const currentUserId = mmkvStorage.getItem('token')?.user?._id;
+
+  const refetchProfile = async () => {
+    try {
+      const response = await ProfileApi(userId);
+      if (response?.success) {
+        setProfile(response?.data?.data || {});
+        setIsSocialiced(response?.data?.isSocialiced ?? null);
+      } else {
+        setProfile(null);
+      }
+    } catch (error) {
+      console.error('Error refetching profile:', error);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -39,9 +52,18 @@ const ProfileComponent = ({ userId }) => {
     return () => {
       isMounted = false;
     };
-  }, [userId],[]);
+  }, [userId]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      refetchProfile();
+    });
+
+    return unsubscribe;
+  }, [navigation, userId]);
 
   const handleLogout = () => {
+    mmkvStorage.clearAll();
     navigation.reset({
       index: 0,
       routes: [{ name: 'Login' }],
@@ -52,32 +74,73 @@ const ProfileComponent = ({ userId }) => {
     if (isSocialiced === null || isSocialiced === false) {
       const res = await sendSocialiceRequest(currentUserId, userId);
       if (res.success) {
-        setIsSocialiced(true);
+        refetchProfile();
       } else {
-        console.log('Socialice request failed:', res.error);
+        console.error('Failed to send Socialice request:', res.message);
       }
     }
   };
 
   const handleEdit = () => {
-    //edit logic
+    navigation.navigate('ProfilePhotoUpdate');
+  };
+
+  const Message = userId => {
+    navigation.navigate('MessageScreen', {
+      userId: userId,
+      name: profile?.username,
+      avatar: profile?.profilePic,
+    });
   };
 
   const renderPost = ({ item }) => (
     <Image source={{ uri: item?.imageUrl }} style={ProfileStyles.gridImage} />
   );
 
+  const getSocialiceButtonProps = () => {
+    switch (profile?.isSocialiced) {
+      case null:
+      case false:
+        return {
+          text: 'Socialice?',
+          disabled: false,
+          backgroundColor: ProfileStyles.socialiceButton.backgroundColor, // Default color
+        };
+      case true:
+        return {
+          text: 'Socialiced',
+          disabled: true,
+          backgroundColor: colors.successGreen,
+        };
+      case 'pending':
+        return {
+          text: 'Pending',
+          disabled: true,
+          backgroundColor: colors.slateGray || '#6B7280', // Gray color for pending
+        };
+      default:
+        return {
+          text: 'Socialice?',
+          disabled: false,
+          backgroundColor: ProfileStyles.socialiceButton.backgroundColor,
+        };
+    }
+  };
+
   if (!profile) return null;
+
+  const buttonProps = getSocialiceButtonProps();
 
   return (
     <ScrollView style={ProfileStyles.container}>
-          {userId === currentUserId?(<> <TouchableOpacity
-        style={ProfileStyles.logoutButton}
-        onPress={handleLogout}
-      >
-        <Text style={ProfileStyles.logoutText}>Logout</Text>
-      </TouchableOpacity></>):null}
-     
+      {userId === currentUserId ? (
+        <TouchableOpacity
+          style={ProfileStyles.logoutButton}
+          onPress={handleLogout}
+        >
+          <Text style={ProfileStyles.logoutText}>Logout</Text>
+        </TouchableOpacity>
+      ) : null}
 
       <View style={ProfileStyles.profileTop}>
         <Image
@@ -102,7 +165,7 @@ const ProfileComponent = ({ userId }) => {
           </View>
         </View>
 
-        {userId === currentUserId? (
+        {userId === currentUserId ? (
           <TouchableOpacity
             style={ProfileStyles.socialiceButton}
             onPress={handleEdit}
@@ -110,17 +173,49 @@ const ProfileComponent = ({ userId }) => {
             <Text style={ProfileStyles.buttonText}>Edit Profile</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity
-            style={[
-              ProfileStyles.socialiceButton,
-              isSocialiced && { backgroundColor: colors.successGreen },
-            ]}
-            onPress={handleSocialice}
-          >
-            <Text style={ProfileStyles.buttonText}>
-              {isSocialiced ? 'Socialiced' : 'Socialice?'}
-            </Text>
-          </TouchableOpacity>
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginVertical: 10,
+              }}
+            >
+              <TouchableOpacity
+                style={[
+                  ProfileStyles.socialiceButton,
+                  {
+                    backgroundColor: buttonProps.backgroundColor,
+                    opacity: buttonProps.disabled ? 0.7 : 1,
+                  },
+                ]}
+                onPress={buttonProps.disabled ? null : handleSocialice}
+                disabled={buttonProps.disabled}
+              >
+                <Text style={ProfileStyles.buttonText}>{buttonProps.text}</Text>
+              </TouchableOpacity>
+              {profile?.isSocialiced == true ? (
+                <TouchableOpacity
+                  style={ProfileStyles.socialiceButton}
+                  onPress={() => Message(userId)}
+                >
+                  <Text style={ProfileStyles.buttonText}>Message</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={[
+                    ProfileStyles.socialiceButton,
+                    {
+                      backgroundColor: colors.slateGray,
+                    },
+                  ]}
+                  disabled={true}
+                >
+                  <Text style={ProfileStyles.buttonText}>Message</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </>
         )}
       </View>
 
