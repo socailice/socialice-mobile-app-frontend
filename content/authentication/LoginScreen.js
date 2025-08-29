@@ -12,32 +12,25 @@ const LoginScreen = ({ setIsLoggedIn }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!phone || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
+const handleLogin = async () => {
+  setLoading(true);
+
+  try {
+    const result = await login(phone, password);
+
+    if (result.success) {
+      mmkvStorage.setItem('token', result?.data);
+      setIsLoggedIn(true);
+      navigation.navigate('Main'); 
+    } else {
+      Alert.alert('Error', result.error);
     }
-
-    setLoading(true);
-
-    try {
-      // const result = await login(phone, password);
-
-      // if (result.success) {
-      //   mmkvStorage.setItem('token', result.data);
-      //   setIsLoggedIn(true);
-      //   Alert.alert('Success', 'Login successful!');
-      // } else {
-      //   Alert.alert('Error', result.error);
-      // }
-      navigation.navigate('Main');
-      console.log("LoginApi");
-    } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    Alert.alert('Error', 'Something went wrong. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const goToSignup = () => {
     navigation.navigate('OTP');
@@ -48,12 +41,11 @@ const LoginScreen = ({ setIsLoggedIn }) => {
       <Text style={StyleSheet.flatten([styles.authTitle])}>Login</Text>
 
       <TextInput
-        placeholder="Phone Number"
+        placeholder="User Name"
         value={phone}
         onChangeText={setPhone}
         placeholderTextColor={colors.placeholderText}
         style={StyleSheet.flatten([styles.authTextInput])}
-        keyboardType="phone-pad"
       />
 
       <TextInput

@@ -8,6 +8,9 @@ import MessageScreen from '../screens/MessageScreen';
 import MediaSelectionScreen from '../screens/PostScreen/MediaSelectionScreen';
 import ImageCropScreen from '../screens/PostScreen/ImageCropScreen';
 import PostCaptionScreen from '../screens/PostScreen/PostCaptionScreen';
+import CubeProfileScreen from '../screens/CubeProfileScreen';
+import ProfilePhotoUpdateScreen from '../components/ProfilePhotoUpdateScreen';
+import CommentsScreen from '../components/Comments';
 
 const Stack = createStackNavigator();
 
@@ -53,6 +56,7 @@ const StackNavigator = ({ setIsLoggedIn }) => {
         )}
       </Stack.Screen>
       <Stack.Screen name="OTP" component={OtpScreen} />
+      <Stack.Screen name="CubeProfile" component={CubeProfileScreen} /> 
       <Stack.Screen name="SignUp">
         {(props) => (
           <SignupScreen
@@ -79,6 +83,17 @@ const StackNavigator = ({ setIsLoggedIn }) => {
           gestureEnabled: false,
         }}
       />
+      <Stack.Screen 
+  name="Comments" 
+  component={CommentsScreen}
+  options={{
+    headerShown: false, 
+    presentation: 'card',
+  }}
+/>
+      <Stack.Screen name="ProfilePhotoUpdate" component={ProfilePhotoUpdateScreen} />
+
+
     </Stack.Navigator>
   );
 };

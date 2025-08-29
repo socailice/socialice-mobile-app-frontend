@@ -62,7 +62,7 @@ const ProfileStyles = StyleSheet.create({
     color: colors.primaryText,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: 20,
     color: colors.secondaryText,
   },
   socialiceButton: {
@@ -70,7 +70,7 @@ const ProfileStyles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 10,
     borderRadius: 25,
-    marginTop: 10,
+    margin: 10,
   },
   buttonText: {
     color: colors.whiteText,

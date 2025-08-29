@@ -13,35 +13,52 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostStyles from '../../utils/styles/PostStyles';
+import { uploadImage } from '../../utils/conifg/CloudinaryService';
+import { createPost } from '../api/PostApi';
+import mmkvStorage from '../../utils/storage/MmkvStorage';
+
+const userId = mmkvStorage.getItem('token')?.user?._id;
 
 const PostCaptionScreen = ({ navigation, route }) => {
   const { imageData } = route.params;
   const [caption, setCaption] = useState('');
   const [isPosting, setIsPosting] = useState(false);
 
-  // Navigation Functions
   const handleBack = () => {
-    navigation.pop(2); // Go back 2 screens to MediaSelection
+    navigation.pop(2);
   };
+const handlePost = async () => {
+  setIsPosting(true);
 
-  const handlePost = async () => {
-    setIsPosting(true);
-    
-    // Simulate posting
-    setTimeout(() => {
-      Alert.alert(
-        'Posted!', 
-        'Your post has been shared successfully.',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('Main')
-          }
-        ]
-      );
-      setIsPosting(false);
-    }, 1500);
-  };
+  try {
+    const imageUrl = await uploadImage(imageData.uri || imageData.path);
+
+    const result = await createPost(userId, imageUrl, caption);
+
+    if (result.success) {
+      Alert.alert('Success', 'Your post has been shared successfully!', [
+        { text: 'OK', onPress: () => navigation.navigate('Main') },
+      ]);
+    } else {
+      throw new Error(result.error);
+    }
+
+  } catch (error) {
+    console.error('Upload failed:', error);
+
+    let message = 'Upload failed. Please try again.';
+    if (typeof error === 'string') {
+      message = error;
+    } else if (error?.message) {
+      message = error.message;
+    }
+
+    Alert.alert('Upload Failed', message);
+  } finally {
+    setIsPosting(false);
+  }
+};
+
 
   return (
     <SafeAreaView style={PostStyles.container}>
@@ -49,7 +66,6 @@ const PostCaptionScreen = ({ navigation, route }) => {
         style={PostStyles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* Header */}
         <View style={PostStyles.header}>
           <TouchableOpacity style={PostStyles.headerButton} onPress={handleBack}>
             <Ionicons name="arrow-back" size={24} color="#000" />
@@ -64,13 +80,11 @@ const PostCaptionScreen = ({ navigation, route }) => {
               PostStyles.headerButtonText,
               isPosting && PostStyles.headerButtonDisabled
             ]}>
-              {isPosting ? 'Posting...' : 'Post'}
+              {isPosting ? 'Uploading...' : 'Post'}
             </Text>
           </TouchableOpacity>
         </View>
-
         <ScrollView style={PostStyles.content}>
-          {/* Post Composition */}
           <View style={PostStyles.postRow}>
             <Image 
               source={{ uri: imageData.path || imageData.uri }} 
@@ -86,7 +100,6 @@ const PostCaptionScreen = ({ navigation, route }) => {
               maxLength={280}
             />
           </View>
-
           <View style={PostStyles.characterCount}>
             <Text style={PostStyles.characterCountText}>
               {caption.length}/280

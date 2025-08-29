@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,13 +9,13 @@ import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import colors from '../utils/styles/colors';
 
+import mmkvStorage from '../utils/storage/MmkvStorage';
+
 const Tab = createBottomTabNavigator();
 
-// Simple component that navigates to post flow when mounted
 const PostButton = ({ navigation, route }) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // Get the current tab name from the parent navigator
       const currentTab = route.name;
       navigation.navigate('PostFlow', { 
         screen: 'MediaSelection',
@@ -29,6 +29,23 @@ const PostButton = ({ navigation, route }) => {
 };
 
 const BottomNavigator = () => {
+  const [userId, setUserId] = useState(null);
+
+  const handleTabPress = useCallback(() => {
+    const newUserId = mmkvStorage.getItem('token')?.user?._id;
+    setUserId(newUserId);
+  }, []);
+
+  // Initialize userId on component mount
+  useEffect(() => {
+    const initialUserId = mmkvStorage.getItem('token')?.user?._id;
+    setUserId(initialUserId);
+  }, []);
+
+  const ProfileScreenWrapper = (props) => {
+    return <ProfileScreen {...props} userId={userId} />;
+  };
+
   return (
     <View style={styles.container}>
       <TopBar />
@@ -67,12 +84,15 @@ const BottomNavigator = () => {
             return <Ionicons name={iconName} size={24} color={color} />;
           },
         })}
+        screenListeners={{
+          tabPress: handleTabPress,
+        }}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Cube" component={CubeScreen} />
         <Tab.Screen name="Post" component={PostButton} />
         <Tab.Screen name="Chat" component={ChatScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreenWrapper} />
       </Tab.Navigator>
     </View>
   );

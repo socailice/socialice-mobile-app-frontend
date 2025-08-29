@@ -57,13 +57,12 @@ const MediaSelectionScreen = ({ navigation }) => {
             'Gallery access is required to select photos',
             [
               { text: 'Cancel', style: 'cancel' },
-              { text: 'Settings', onPress: () => console.log('Open app settings') }
+              { text: 'Settings', onPress: () => {} }
             ]
           );
           setLoading(false);
         }
       } catch (err) {
-        console.warn('Permission request error:', err);
         setLoading(false);
       }
     } else {
@@ -84,7 +83,6 @@ const MediaSelectionScreen = ({ navigation }) => {
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error loading photos:', error);
       Alert.alert('Error', 'Failed to load photos from gallery');
       setLoading(false);
     }
@@ -92,7 +90,6 @@ const MediaSelectionScreen = ({ navigation }) => {
 
   // Camera Function
   const openCamera = () => {
-    console.log('Opening camera...');
     
     const options = {
       mediaType: 'photo',
@@ -101,43 +98,35 @@ const MediaSelectionScreen = ({ navigation }) => {
       includeBase64: false,
     };
 
-    console.log('Camera options:', options);
 
     launchCamera(options, (response) => {
-      console.log('Full camera response:', JSON.stringify(response, null, 2));
       
       if (response.didCancel) {
-        console.log('User cancelled camera');
         return;
       }
       
       if (response.error) {
-        console.log('Camera error:', response.error);
         Alert.alert('Camera Error', response.error);
         return;
       }
 
       if (response.errorCode) {
-        console.log('Camera errorCode:', response.errorCode);
         Alert.alert('Camera Error Code', response.errorCode);
         return;
       }
 
       if (response.errorMessage) {
-        console.log('Camera errorMessage:', response.errorMessage);
         Alert.alert('Camera Error Message', response.errorMessage);
         return;
       }
       
       if (response.assets && response.assets.length > 0) {
-        console.log('Camera success, asset:', response.assets[0]);
         const asset = response.assets[0];
         navigation.navigate('ImageCrop', { 
           imageUri: asset.uri,
           imageData: asset
         });
       } else {
-        console.log('No assets in response');
         Alert.alert('No Photo', 'No photo was captured');
       }
     });
@@ -152,7 +141,7 @@ const MediaSelectionScreen = ({ navigation }) => {
       <Image 
         source={{ uri: item.node.image.uri }} 
         style={PostStyles.gridImage}
-        onError={(error) => console.log('Image load error:', error)}
+        onError={(error) => Alert.alert('Image load error:', error)}
       />
       {selectedPhoto?.uri === item.node.image.uri && (
         <View style={PostStyles.selectedOverlay}>
@@ -189,7 +178,7 @@ const MediaSelectionScreen = ({ navigation }) => {
         <Image 
           source={{ uri: selectedPhoto.uri }} 
           style={PostStyles.imagePreview}
-          onError={(error) => console.log('Preview image error:', error)}
+          onError={(error) => Alert.alert('Preview image error:', error)}
         />
       ) : (
         <View style={[PostStyles.imagePreview, PostStyles.placeholderPreview]}>
