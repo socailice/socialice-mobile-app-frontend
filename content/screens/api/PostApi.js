@@ -25,6 +25,30 @@ export const createPost = async (userId, mediaUrl, caption) => {
   }
 };
 
+export const hammerPost = async (postId, username, action = "add") => {
+  try {
+    const response = await fetch(API_CONFIG.BASE_URL + "/socialice/posts/hammer", {
+      method: "POST",
+      headers: API_CONFIG.HEADERS,
+      body: JSON.stringify({
+        post_id: postId,
+        username: username,
+        action: action,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return { success: true, data };
+    } else {
+      return { success: false, error: data?.message || "Hammer action failed" };
+    }
+  } catch (error) {
+    return { success: false, error: error?.message || "Network error" };
+  }
+};
+
 export const sendSocialiceRequest = async (fromUserId, toUserId) => {
   try {
     const response = await fetch(`${API_CONFIG.BASE_URL}/socialice/cubes/request`, {
