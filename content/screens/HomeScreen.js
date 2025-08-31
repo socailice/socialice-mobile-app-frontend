@@ -5,66 +5,54 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import styles from '../utils/styles/HomeStyles';
 import { globalFeed } from './api/GetApi';
 import mmkvStorage from '../utils/storage/MmkvStorage';
+import { hammerPost } from './api/PostApi';
 
 const HomeScreen = ({ navigation }) => {
   const [feedData, setFeedData] = useState([]);
+  const [loading, setLoading] = useState(true);   
+  const [refreshing, setRefreshing] = useState(false); 
   const username = mmkvStorage.getItem('token')?.user?.username;
 
-const handleHammerPress = useCallback(async (postId) => {
-  console.log("username= ", username);
-
-  console.log("DEBUG username:", mmkvStorage.getItem('token')); 
-
-  if (!username) {
-    console.error("No username found in storage");
-    return;
-  }
-
-  setFeedData(prevData =>
-    prevData.map(post => {
-      if (post._id === postId) {
-        return {
-          ...post,
-          hammers: {
-            ...post.hammers,
-            hammeredByCurrentUser: !post.hammers.hammeredByCurrentUser,
-            count: post.hammers.hammeredByCurrentUser 
-              ? post.hammers.count - 1 
-              : post.hammers.count + 1
-          }
-        };
-      }
-      return post;
-    })
-  );
-
-  try {
-    const res = await fetch("http://10.0.2.2:8000/socialice/posts/hammer", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        post_id: postId,
-        username: username,   
-        action: "add",        // SAANVI MODULAR
-      }),
-    });
-
-    const data = await res.json();
-    console.log("Hammer API response:", data);
-  } catch (err) {
-    console.error("Hammer API error:", err);
-  }
-}, []);
-
+  const handleHammerPress = useCallback(async (postId) => {
+    if (!username) {
+      console.error("No username found in storage");
+      return;
+    }
+    setFeedData(prevData =>
+      prevData.map(post => {
+        if (post._id === postId) {
+          return {
+            ...post,
+            hammers: {
+              ...post.hammers,
+              hammeredByCurrentUser: !post.hammers.hammeredByCurrentUser,
+              count: post.hammers.hammeredByCurrentUser
+                ? post.hammers.count - 1
+                : post.hammers.count + 1
+            }
+          };
+        }
+        return post;
+      })
+    );
+    const result = await hammerPost(postId, username, "add");
+    if (!result.success) {
+      console.error("Hammer API error:", result.error);
+    } else {
+      console.log("Hammer API response:", result.data);
+    }
+  }, [username]);
 
   const handleCommentsPress = useCallback((postId) => {
     const postData = feedData.find(post => post._id === postId);
     const userToken = mmkvStorage.getItem('token');
-    
+
     navigation.navigate('Comments', {
       postId: postId,
       comments: postData?.comments || [],
@@ -80,17 +68,27 @@ const handleHammerPress = useCallback(async (postId) => {
     // Add your logic for handling dots press here
   }, []);
 
-  useEffect(() => {
-    const fetchFeed = async () => {
-      try {
-        const response = await globalFeed();
-        if (response?.success && Array.isArray(response.data)) {
-          setFeedData(response.data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch feed:', err);
+  const fetchFeed = async () => {
+    try {
+      if (!refreshing) setLoading(true);
+      const response = await globalFeed();
+      if (response?.success && Array.isArray(response.data)) {
+        setFeedData(response.data);
       }
-    };
+    } catch (err) {
+      console.error('Failed to fetch feed:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeed();
+  }, []);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
     fetchFeed();
   }, []);
 
@@ -115,12 +113,14 @@ const handleHammerPress = useCallback(async (postId) => {
             <Text style={styles.dotsText}>•••</Text>
           </TouchableOpacity>
         </View>
+
         {/* Post Image */}
         <Image
           source={{ uri: item.imageUrl || 'https://via.placeholder.com/400' }}
           style={styles.postImage}
           resizeMode="cover"
         />
+
         {/* Post Actions */}
         <View style={styles.postActions}>
           <TouchableOpacity
@@ -139,6 +139,7 @@ const handleHammerPress = useCallback(async (postId) => {
               {item.hammers?.count || 0}
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.commentsButton}
             onPress={() => handleCommentsPress(item._id)}
@@ -149,11 +150,15 @@ const handleHammerPress = useCallback(async (postId) => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Caption */}
         <View style={styles.postContent}>
           <Text style={styles.caption}>
             {item.caption || ''}
           </Text>
         </View>
+
+        {/* View Comments */}
         {item.comments && item.comments.length > 0 && (
           <View style={styles.viewCommentsSection}>
             <TouchableOpacity onPress={() => handleCommentsPress(item._id)}>
@@ -167,6 +172,14 @@ const handleHammerPress = useCallback(async (postId) => {
     </View>
   ), [handleDotsPress, handleHammerPress, handleCommentsPress]);
 
+  if (loading && !refreshing) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#00bcd4" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -175,6 +188,9 @@ const handleHammerPress = useCallback(async (postId) => {
         renderItem={renderPost}
         keyExtractor={(item) => item._id}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={["#00bcd4"]} />
+        }
       />
     </View>
   );
