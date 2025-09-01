@@ -1,5 +1,4 @@
 import API_CONFIG from "../../../settings";
-
 export const login = async (phone, password) => {
   try {
     const response = await fetch(API_CONFIG.BASE_URL + "/socialice/auth/login", {
@@ -11,26 +10,31 @@ export const login = async (phone, password) => {
       }),
     });
 
-    const data = await response.json();
-
+    // ✅ Corrected Logic: Check for a successful response first.
     if (response.ok) {
+      // If the response is successful, parse it as JSON.
+      const data = await response.json();
       return {
         success: true,
         data: data,
       };
     } else {
+      // If the response is not successful, get the plain text of the error message.
+      const errorText = await response.text();
       return {
         success: false,
-        error: data?.message || 'Login failed',
+        error: errorText || 'Login failed',
       };
     }
   } catch (error) {
+    // This catch block is for true network errors (e.g., no internet connection).
     return {
       success: false,
       error: error?.message || 'Network error',
     };
   }
 };
+
 
 export const signup = async (fullname, username, password, phone) => {
   try {

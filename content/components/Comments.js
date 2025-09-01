@@ -57,7 +57,7 @@ export default function CommentsScreen({ route }) {
 
     try {
       setLoading(true);
-      const response = await fetch("http://10.0.2.2:8000/socialice/posts/comment", {
+      const response = await fetch("https://socialice-backend.onrender.com/socialice/posts/comment", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

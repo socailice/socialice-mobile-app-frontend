@@ -41,7 +41,7 @@ const MessageScreen = ({ route }) => {
   const fetchMessages = async () => {
     setIsLoading(true);
     try {
-      const url = `http://10.0.2.2:8000/socialice/chat/daily?sender_username=${currentUsername}&receiver_username=${name}`;
+      const url = `https://socialice-backend.onrender.com/socialice/chat/daily?sender_username=${currentUsername}&receiver_username=${name}`;
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${tokenData?.access_token}`,
@@ -73,7 +73,7 @@ const MessageScreen = ({ route }) => {
   };
 
   const sendMessageAPI = async messageText => {
-    const response = await fetch('http://10.0.2.2:8000/socialice/chat/send', {
+    const response = await fetch('https://socialice-backend.onrender.com/socialice/chat/send', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${tokenData?.access_token}`,
@@ -94,7 +94,7 @@ const MessageScreen = ({ route }) => {
     if (!currentUsername || ws.current?.readyState === WebSocket.OPEN) return;
 
     ws.current = new WebSocket(
-      `ws://10.0.2.2:8000/socialice/chat/ws/chat/${currentUsername}`,
+      `wss://socialice-backend.onrender.com/socialice/chat/ws/chat/${currentUsername}`,
     );
 
     ws.current.onmessage = event => {

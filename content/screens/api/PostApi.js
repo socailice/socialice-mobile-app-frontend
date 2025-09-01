@@ -1,6 +1,7 @@
 import API_CONFIG from "../../../settings";
 
 export const createPost = async (userId, mediaUrl, caption) => {
+  console.log("Creating post with:", { userId, mediaUrl, caption });
   try {
     const response = await fetch(API_CONFIG.BASE_URL + "/socialice/posts/post", {
       method: "POST",

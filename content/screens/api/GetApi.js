@@ -117,7 +117,7 @@ export async function fetchChats(username) {
   }
 
   const response = await fetch(
-    `http://10.0.2.2:8000/socialice/chat/last-messages/${username}?limit=20`,
+    `https://socialice-backend.onrender.com/socialice/chat/last-messages/${username}?limit=20`,
     {
       method: 'GET',
       headers: {
