@@ -85,13 +85,9 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  // ✅ Use useFocusEffect instead of useEffect to refetch data
   useFocusEffect(
     useCallback(() => {
       fetchFeed();
-      return () => {
-        // Optional cleanup function
-      };
     }, [])
   );
 

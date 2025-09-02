@@ -6,6 +6,8 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../utils/styles/colors';
@@ -20,11 +22,19 @@ const ProfileComponent = ({ userId }) => {
   const navigation = useNavigation();
   const [profile, setProfile] = useState(null);
   const [isSocialiced, setIsSocialiced] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const currentUserId = mmkvStorage.getItem('token')?.user?._id;
 
-  const refetchProfile = async () => {
+  const fetchProfile = async (isRefresh = false) => {
     try {
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+
       const response = await ProfileApi(userId);
       if (response?.success) {
         setProfile(response?.data?.data || {});
@@ -33,25 +43,27 @@ const ProfileComponent = ({ userId }) => {
         setProfile(null);
       }
     } catch (error) {
-      console.error('Error refetching profile:', error);
+      console.error('Error fetching profile:', error);
+      setProfile(null);
+    } finally {
+      if (isRefresh) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
+  const refetchProfile = async () => {
+    await fetchProfile(false);
+  };
+
+  const onRefresh = async () => {
+    await fetchProfile(true);
+  };
+
   useEffect(() => {
-    let isMounted = true;
-    ProfileApi(userId).then(response => {
-      if (isMounted) {
-        if (response?.success) {
-          setProfile(response?.data?.data || {});
-          setIsSocialiced(response?.data?.isSocialiced ?? null);
-        } else {
-          setProfile(null);
-        }
-      }
-    });
-    return () => {
-      isMounted = false;
-    };
+    fetchProfile(false);
   }, [userId]);
 
   useEffect(() => {
@@ -104,7 +116,7 @@ const ProfileComponent = ({ userId }) => {
         return {
           text: 'Socialice?',
           disabled: false,
-          backgroundColor: ProfileStyles.socialiceButton.backgroundColor, // Default color
+          backgroundColor: ProfileStyles.socialiceButton.backgroundColor,
         };
       case true:
         return {
@@ -116,7 +128,7 @@ const ProfileComponent = ({ userId }) => {
         return {
           text: 'Pending',
           disabled: true,
-          backgroundColor: colors.slateGray || '#6B7280', // Gray color for pending
+          backgroundColor: colors.slateGray || '#6B7280',
         };
       default:
         return {
@@ -127,12 +139,49 @@ const ProfileComponent = ({ userId }) => {
     }
   };
 
-  if (!profile) return null;
+  if (loading) {
+    return (
+      <View style={[ProfileStyles.container,{justifyContent:'center',alignItems:'center'}]}>
+        <ActivityIndicator size="large" color={colors.primary || '#007AFF'} />
+      </View>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <ScrollView
+        style={ProfileStyles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View style={ProfileStyles.errorContainer}>
+          <Text style={ProfileStyles.errorText}>Failed to load profile</Text>
+          <TouchableOpacity
+            style={ProfileStyles.retryButton}
+            onPress={() => fetchProfile(false)}
+          >
+            <Text style={ProfileStyles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    );
+  }
 
   const buttonProps = getSocialiceButtonProps();
 
   return (
-    <ScrollView style={ProfileStyles.container}>
+    <ScrollView
+      style={ProfileStyles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={[colors.primary || '#007AFF']}
+          tintColor={colors.primary || '#007AFF'}
+        />
+      }
+    >
       {userId === currentUserId ? (
         <TouchableOpacity
           style={ProfileStyles.logoutButton}
@@ -164,7 +213,6 @@ const ProfileComponent = ({ userId }) => {
             <Text style={ProfileStyles.statLabel}>🧊 Socialiced</Text>
           </View>
         </View>
-
         {userId === currentUserId ? (
           <TouchableOpacity
             style={ProfileStyles.socialiceButton}
