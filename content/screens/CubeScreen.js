@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { cubes, searchCubes } from './api/GetApi';
@@ -17,18 +19,22 @@ import {cancelSocialiceRequest, respondToSocialiceRequest} from './api/PostApi';
 
 const CubeScreen = () => {
   const userId = mmkvStorage.getItem('token')?.user?._id;
-  const [cubeData, setCubeData] = useState({ totalCubes: 0, cubeRequests: [] });
+  const [cubeData, setCubeData] = useState({ cubeRequests: [] });
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [processingRequests, setProcessingRequests] = useState(new Set());
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
 
+  const fetchCubes = async () => {
+    const data = await cubes(userId);
+    setCubeData(data || { cubeRequests: [] });
+    setLoading(false);
+  };
+
   useEffect(() => {
-    async function fetchCubes() {
-      const data = await cubes(userId);
-      setCubeData(data || { totalCubes: 0, cubeRequests: [] });
-    }
     fetchCubes();
   }, [userId]);
 
@@ -43,6 +49,12 @@ const CubeScreen = () => {
     }
     fetchSearchResults();
   }, [searchQuery, userId]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchCubes();
+    setRefreshing(false);
+  };
 
   const handleFindCubes = () => setIsSearchMode(true);
   const handleBackToMain = () => {
@@ -100,7 +112,6 @@ const CubeScreen = () => {
   };
 
   const handleRejectRequest = async (toUserId) => {
-  
     
     try {
       const result = await cancelSocialiceRequest(
@@ -236,7 +247,9 @@ const CubeScreen = () => {
     <SafeAreaView style={CubeStyles.container}>
       <View style={CubeStyles.header}>
         <View style={CubeStyles.card}>
-          <Text style={CubeStyles.totalCubesNumber}>{cubeData?.totalCubes || 0}</Text>
+          <Text style={CubeStyles.totalCubesNumber}>
+            {cubeData?.totalCubes !== undefined ? cubeData.totalCubes : ''}
+          </Text>
           <Text style={CubeStyles.totalCubesLabel}>Total Cubes</Text>
           <TouchableOpacity style={CubeStyles.findCubesButton} onPress={handleFindCubes}>
             <Text style={CubeStyles.findCubesText}>Find Cubes</Text>
@@ -248,13 +261,27 @@ const CubeScreen = () => {
           <Text style={CubeStyles.requestsTitle}>Cube Requests</Text>
           <Text style={CubeStyles.requestsCount}>{cubeData?.cubeRequests?.length || 0}</Text>
         </View>
-        <FlatList
-          data={cubeData?.cubeRequests || []}
-          renderItem={renderRequestItem}
-          keyExtractor={(item) => item?._id || Math.random().toString()}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={CubeStyles.listContainer}
-        />
+        {loading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size="large" color={colors?.primary || '#007AFF'} />
+          </View>
+        ) : (
+          <FlatList
+            data={cubeData?.cubeRequests || []}
+            renderItem={renderRequestItem}
+            keyExtractor={(item) => item?._id || Math.random().toString()}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={CubeStyles.listContainer}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor={colors?.primary}
+                colors={[colors?.primary || '#007AFF']}
+              />
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );
