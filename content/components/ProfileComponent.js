@@ -213,7 +213,6 @@ const ProfileComponent = ({ userId }) => {
             <Text style={ProfileStyles.statLabel}>🧊 Socialiced</Text>
           </View>
         </View>
-
         {userId === currentUserId ? (
           <TouchableOpacity
             style={ProfileStyles.socialiceButton}

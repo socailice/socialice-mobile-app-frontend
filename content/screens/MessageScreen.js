@@ -9,6 +9,8 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import colors from '../utils/styles/colors';
@@ -25,6 +27,7 @@ const MessageScreen = ({ route }) => {
 
   const ws = useRef(null);
   const messageIds = useRef(new Set());
+  const flatListRef = useRef(null);
 
   const formatTimestamp = timestamp => {
     const date = new Date(timestamp || Date.now());
@@ -34,7 +37,14 @@ const MessageScreen = ({ route }) => {
   const addMessage = newMessage => {
     if (!messageIds.current.has(newMessage?.id)) {
       messageIds.current.add(newMessage?.id);
-      setMessages(prev => [...prev, newMessage]);
+      setMessages(prev => {
+        const updated = [...prev, newMessage];
+        // Auto scroll to bottom when new message is added
+        setTimeout(() => {
+          flatListRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+        return updated;
+      });
     }
   };
 
@@ -202,17 +212,24 @@ const MessageScreen = ({ route }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      style={styles.container} 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+    >
       <View style={styles.header}>
         <Image source={{ uri: avatar }} style={styles.avatar} />
         <Text style={styles.name}>{name || 'User'}</Text>
       </View>
 
       <FlatList
+        ref={flatListRef}
         data={messages}
         renderItem={renderMessage}
         keyExtractor={item => item?.id}
         style={styles.messagesList}
+        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+        onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
       />
 
       <View style={styles.inputContainer}>
@@ -225,6 +242,7 @@ const MessageScreen = ({ route }) => {
           onSubmitEditing={sendMessage}
           returnKeyType="send"
           multiline
+          blurOnSubmit={false}
         />
         <TouchableOpacity
           style={[styles.sendButton, !input.trim() && styles.sendButtonDisabled]}
@@ -234,7 +252,7 @@ const MessageScreen = ({ route }) => {
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
