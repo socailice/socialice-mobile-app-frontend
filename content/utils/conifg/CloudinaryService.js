@@ -1,5 +1,5 @@
 export const uploadImage = async (imageUri) => {
-  const cloudName = 'datvcvlcd';        
+  const cloudName = 'ddlv7flnl';        
   const uploadPreset = 'Socialice';    
 
   if (!imageUri) {

@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
+// Import the useFocusEffect hook from React Navigation
+import { useFocusEffect } from '@react-navigation/native';
 import styles from '../utils/styles/HomeStyles';
 import { globalFeed } from './api/GetApi';
 import mmkvStorage from '../utils/storage/MmkvStorage';
@@ -15,8 +17,8 @@ import { hammerPost } from './api/PostApi';
 
 const HomeScreen = ({ navigation }) => {
   const [feedData, setFeedData] = useState([]);
-  const [loading, setLoading] = useState(true);   
-  const [refreshing, setRefreshing] = useState(false); 
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const username = mmkvStorage.getItem('token')?.user?.username;
 
   const handleHammerPress = useCallback(async (postId) => {
@@ -83,9 +85,15 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    fetchFeed();
-  }, []);
+  // ✅ Use useFocusEffect instead of useEffect to refetch data
+  useFocusEffect(
+    useCallback(() => {
+      fetchFeed();
+      return () => {
+        // Optional cleanup function
+      };
+    }, [])
+  );
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -197,3 +205,5 @@ const HomeScreen = ({ navigation }) => {
 };
 
 export default HomeScreen;
+
+//SAANVI

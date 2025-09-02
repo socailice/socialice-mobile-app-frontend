@@ -1,5 +1,5 @@
 const API_CONFIG = {
-  BASE_URL: 'http://10.0.2.2:8000',
+  BASE_URL: 'https://socialice-backend.onrender.com',
   TIMEOUT: 10000,
   HEADERS: {
     'Content-Type': 'application/json',
