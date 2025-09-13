@@ -33,6 +33,7 @@ const ProfilePhotoUpdateScreen = ({ navigation }) => {
     );
   };
 
+  //SAANVI
   const upload = async () => {
     if (!localUri) {
       Alert.alert('Error', 'Please select an image first');
@@ -88,16 +89,6 @@ const ProfilePhotoUpdateScreen = ({ navigation }) => {
       if (!data?.success) {
         throw new Error(data?.message || 'Update failed');
       }
-
-      const updatedTokenObj = {
-        ...tokenObj,
-        user: {
-          ...tokenObj.user,
-          profilePic: cloudinaryUrl
-        }
-      };
-      mmkvStorage.setItem('token', updatedTokenObj);
-
       Alert.alert('Success', 'Profile photo updated successfully!', [
         { 
           text: 'OK', 
