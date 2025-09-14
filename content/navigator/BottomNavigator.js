@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'; // Add this import
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TopBar from '../components/TopBar';
 import HomeScreen from '../screens/HomeScreen';
@@ -30,13 +31,13 @@ const PostButton = ({ navigation, route }) => {
 
 const BottomNavigator = () => {
   const [userId, setUserId] = useState(null);
+  const insets = useSafeAreaInsets(); 
 
   const handleTabPress = useCallback(() => {
     const newUserId = mmkvStorage.getItem('token')?.user?._id;
     setUserId(newUserId);
   }, []);
 
-  // Initialize userId on component mount
   useEffect(() => {
     const initialUserId = mmkvStorage.getItem('token')?.user?._id;
     setUserId(initialUserId);
@@ -57,8 +58,8 @@ const BottomNavigator = () => {
           tabBarStyle: {
             backgroundColor: colors.deepIce,
             borderTopColor: colors.shadowColor,
-            height: 55,
-            paddingBottom: 5,
+            height: 55 + insets.bottom, 
+            paddingBottom: 5 + insets.bottom,
           },
           tabBarIcon: ({ color, size }) => {
             let iconName;

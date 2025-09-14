@@ -46,9 +46,7 @@ const HomeScreen = ({ navigation }) => {
     const result = await hammerPost(postId, username, "add");
     if (!result.success) {
       console.error("Hammer API error:", result.error);
-    } else {
-      console.log("Hammer API response:", result.data);
-    }
+    } 
   }, [username]);
 
   const handleCommentsPress = useCallback((postId) => {
