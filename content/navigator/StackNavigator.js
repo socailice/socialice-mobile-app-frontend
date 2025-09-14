@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import LoginScreen from '../authentication/LoginScreen';
 import OtpScreen from '../authentication/OtpScreen';
@@ -11,6 +11,7 @@ import PostCaptionScreen from '../screens/PostScreen/PostCaptionScreen';
 import CubeProfileScreen from '../screens/CubeProfileScreen';
 import ProfilePhotoUpdateScreen from '../components/ProfilePhotoUpdateScreen';
 import CommentsScreen from '../components/Comments';
+import mmkvStorage from '../utils/storage/MmkvStorage'; 
 
 const Stack = createStackNavigator();
 
@@ -21,7 +22,6 @@ const resetToLogin = (navigation) => {
   });
 };
 
-// Post Flow Stack Navigator
 const PostFlowNavigator = () => (
   <Stack.Navigator
     screenOptions={{
@@ -36,9 +36,26 @@ const PostFlowNavigator = () => (
 );
 
 const StackNavigator = ({ setIsLoggedIn }) => {
+  const [initialRoute, setInitialRoute] = useState(null);
+
+  useEffect(() => {
+    const token = mmkvStorage.getItem('token');
+    if (token && token.access_token) {
+      setInitialRoute('Main');
+      setIsLoggedIn(true);
+    } else {
+      setInitialRoute('Login');
+    }
+  }, []);
+
+  
+  if (!initialRoute) {
+    return null; 
+  }
+
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName={initialRoute}
       screenOptions={{
         headerShown: false,
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -73,8 +90,6 @@ const StackNavigator = ({ setIsLoggedIn }) => {
         }}
       />
       <Stack.Screen name="MessageScreen" component={MessageScreen} />
-      
-      {/* Post Flow Stack */}
       <Stack.Screen
         name="PostFlow"
         component={PostFlowNavigator}
@@ -84,16 +99,14 @@ const StackNavigator = ({ setIsLoggedIn }) => {
         }}
       />
       <Stack.Screen 
-  name="Comments" 
-  component={CommentsScreen}
-  options={{
-    headerShown: false, 
-    presentation: 'card',
-  }}
-/>
+        name="Comments" 
+        component={CommentsScreen}
+        options={{
+          headerShown: false, 
+          presentation: 'card',
+        }}
+      />
       <Stack.Screen name="ProfilePhotoUpdate" component={ProfilePhotoUpdateScreen} />
-
-
     </Stack.Navigator>
   );
 };

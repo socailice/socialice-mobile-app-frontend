@@ -75,6 +75,7 @@ const MessageScreen = ({ route }) => {
       
       formattedMessages.forEach(msg => messageIds.current.add(msg.id));
       setMessages(formattedMessages);
+
     } catch (error) {
       Alert.alert('Error', 'Failed to load messages');
     } finally {
@@ -120,7 +121,7 @@ const MessageScreen = ({ route }) => {
           });
         }
       } catch (error) {
-        console.log('WebSocket message error:', error);
+        console.error('WebSocket message error:', error);
       }
     };
 
@@ -242,7 +243,6 @@ const MessageScreen = ({ route }) => {
           onSubmitEditing={sendMessage}
           returnKeyType="send"
           multiline
-          blurOnSubmit={false}
         />
         <TouchableOpacity
           style={[styles.sendButton, !input.trim() && styles.sendButtonDisabled]}
