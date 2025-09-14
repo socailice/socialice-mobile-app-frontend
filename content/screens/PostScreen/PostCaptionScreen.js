@@ -17,9 +17,10 @@ import { uploadImage } from '../../utils/conifg/CloudinaryService';
 import { createPost } from '../api/PostApi';
 import mmkvStorage from '../../utils/storage/MmkvStorage';
 
-const userId = mmkvStorage.getItem('token')?.user?._id;
+
 
 const PostCaptionScreen = ({ navigation, route }) => {
+  const userId = mmkvStorage.getItem('token')?.user?._id;
   const { imageData } = route.params;
   const [caption, setCaption] = useState('');
   const [isPosting, setIsPosting] = useState(false);
